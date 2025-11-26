@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "818085521143",
+    "firebase_url": "https://mobile-de5c9-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mobile-de5c9",
+    "storage_bucket": "mobile-de5c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818085521143:android:bbfd7bf64670f3dbe355f2",
+        "android_client_info": {
+          "package_name": "com.esprit.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-IZTxI4xh0tHPURSTW47GqrC-110pEck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818085521143:android:73333987122cd132e355f2",
+        "android_client_info": {
+          "package_name": "com.example.eventapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-IZTxI4xh0tHPURSTW47GqrC-110pEck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
