@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventapplication.R;
+import com.example.eventapplication.auth.SessionManager;
 import com.example.eventapplication.data.Event;
 import com.example.eventapplication.data.EventDao;
 import com.example.eventapplication.data.LikesRepository;
@@ -80,6 +81,10 @@ public class DiscoverFragment extends Fragment {
         dao = new EventDao(requireContext());
         likesRepo = new LikesRepository(requireContext());
 
+        // Check current user role
+        SessionManager session = new SessionManager(requireContext());
+        final boolean isAdmin = session.isAdmin();
+
         // 1) Layout managers
         rvSlider.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -133,11 +138,15 @@ public class DiscoverFragment extends Fragment {
         // 3) Initial load
         loadEventsFromDb();
 
-        // 4) FAB -> Add new event
-        fabAdd.setOnClickListener(view -> {
-            Intent i = new Intent(requireContext(), AddEditEventActivity.class);
-            startActivity(i);
-        });
+        // 4) FAB -> Add new event (admins only)
+        if (!isAdmin) {
+            fabAdd.setVisibility(View.GONE);
+        } else {
+            fabAdd.setOnClickListener(view -> {
+                Intent i = new Intent(requireContext(), AddEditEventActivity.class);
+                startActivity(i);
+            });
+        }
 
         // 5) Search filter
         etSearch.addTextChangedListener(new TextWatcher() {

@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
                 loadFragment(new ProfileFragment());
                 return true;
             } else if (id == R.id.nav_admin && isAdminUser) {
-                loadFragment(new AdminDashboardFragment());
+                startActivity(new Intent(this, AdminDashboardActivity.class));
                 return true;
             }
             return false;

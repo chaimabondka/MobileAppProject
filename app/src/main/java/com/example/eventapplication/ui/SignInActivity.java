@@ -84,6 +84,12 @@ public class SignInActivity extends AppCompatActivity {
                         return;
                     }
 
+                    if ("BLOCKED".equalsIgnoreCase(u.role)) {
+                        toast("Your account has been blocked. Please contact support.");
+                        auth.signOut();
+                        return;
+                    }
+
                     // If no admin exists yet, promote this first logged-in user to ADMIN
                     if (!userDao.hasAdmin()) {
                         u.role = "ADMIN";

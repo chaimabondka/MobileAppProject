@@ -1,35 +1,22 @@
 package com.example.eventapplication.ui;
 
 import android.os.Bundle;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.eventapplication.R;
 import com.example.eventapplication.auth.SessionManager;
-import com.example.eventapplication.data.EventDao;
-import com.example.eventapplication.data.EventDbHelper;
-import com.example.eventapplication.data.User;
-import com.example.eventapplication.data.UserDao;
+import com.google.android.material.navigation.NavigationView;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.content.Intent;
-import com.example.eventapplication.data.ReclamationDao;
+public class AdminDashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-import java.util.List;
-
-public class AdminDashboardActivity extends AppCompatActivity implements AdminUserAdapter.OnRoleChangeListener {
-
-    private TextView tvTotalUsers, tvTotalEvents, tvTotalBookings;
-    private RecyclerView rvUsers;
-    private UserDao userDao;
-    private EventDao eventDao;
-    private TextView tvTotalReclamations, tvPendingReclamations;   // 🔹 NEW
-    private ReclamationDao reclamationDao;                          // 🔹 NEW
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,82 +28,67 @@ public class AdminDashboardActivity extends AppCompatActivity implements AdminUs
             return;
         }
 
-        setContentView(R.layout.activity_admin_dashboard);
+        setContentView(R.layout.activity_admin_container);
 
-        userDao = new UserDao(this);
-        eventDao = new EventDao(this);
-        reclamationDao = new ReclamationDao(this); // 🔹 NEW
+        drawerLayout = findViewById(R.id.adminDrawerLayout);
+        Toolbar toolbar = findViewById(R.id.adminToolbar);
+        setSupportActionBar(toolbar);
 
-        tvTotalUsers = findViewById(R.id.tvTotalUsers);
-        tvTotalEvents = findViewById(R.id.tvTotalEvents);
-        tvTotalBookings = findViewById(R.id.tvTotalBookings);
+        NavigationView navView = findViewById(R.id.adminNavView);
+        navView.setNavigationItemSelectedListener(this);
 
-        tvTotalReclamations = findViewById(R.id.tvTotalReclamations);      // 🔹 NEW
-        tvPendingReclamations = findViewById(R.id.tvPendingReclamations);  // 🔹 NEW
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        );
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
-        rvUsers = findViewById(R.id.rvUsers);
-        rvUsers.setLayoutManager(new LinearLayoutManager(this));
-
-        // 🔹 Button "Manage" reclamations
-        findViewById(R.id.btnManageReclamations).setOnClickListener(v -> {
-            Intent i = new Intent(this, ReclamationAdminActivity.class);
-            startActivity(i);
-        });
-
-        loadStats();
-        loadUsers();
-    }
-
-
-    private void loadStats() {
-        int users = userDao.countUsers();
-        int events = eventDao.countEvents();
-        int bookings = countBookings();
-
-        tvTotalUsers.setText(String.valueOf(users));
-        tvTotalEvents.setText(String.valueOf(events));
-        tvTotalBookings.setText(String.valueOf(bookings));
-
-        // 🔹 Reclamations stats
-        int totalRecl = reclamationDao.countAll();
-        int pendingRecl = reclamationDao.countPending();
-
-        tvTotalReclamations.setText(String.valueOf(totalRecl));
-        tvPendingReclamations.setText(String.valueOf(pendingRecl));
-    }
-
-    private int countBookings() {
-        EventDbHelper helper = new EventDbHelper(this);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM " + EventDbHelper.TABLE_BOOKINGS, null);
-        try {
-            if (c.moveToFirst()) {
-                return c.getInt(0);
-            }
-            return 0;
-        } finally {
-            c.close();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.adminContentContainer, new AdminDashboardFragment())
+                    .commit();
+            navView.setCheckedItem(R.id.nav_admin_dashboard);
         }
     }
 
-    private void loadUsers() {
-        List<User> users = userDao.getAll();
-        AdminUserAdapter adapter = new AdminUserAdapter(users, this);
-        rvUsers.setAdapter(adapter);
+    @Override
+    public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_admin_dashboard) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.adminContentContainer, new AdminDashboardFragment())
+                    .commit();
+        } else if (id == R.id.nav_manage_users) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.adminContentContainer, new AdminManageUsersFragment())
+                    .commit();
+        } else if (id == R.id.nav_manage_events) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.adminContentContainer, new AdminManageEventsFragment())
+                    .commit();
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
-    public void onRoleChange(User user, String newRole) {
-        user.role = newRole;
-        userDao.update(user);
-        loadUsers();
-        loadStats();
-    }
-
-    @Override
-    public void onDelete(User user) {
-        userDao.delete(user.id);
-        loadUsers();
-        loadStats();
+    public void onBackPressed() {
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

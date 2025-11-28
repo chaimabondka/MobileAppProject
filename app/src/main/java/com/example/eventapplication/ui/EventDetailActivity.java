@@ -120,13 +120,20 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         loadComments();
         updateButtonState();
 
-        btnEdit.setOnClickListener(v -> {
-            Intent i = new Intent(this, AddEditEventActivity.class);
-            i.putExtra("event_id", eventId);
-            startActivity(i);
-        });
+        // Admin-only controls
+        final boolean isAdmin = session.isAdmin();
+        if (!isAdmin) {
+            btnEdit.setVisibility(android.view.View.GONE);
+            btnDelete.setVisibility(android.view.View.GONE);
+        } else {
+            btnEdit.setOnClickListener(v -> {
+                Intent i = new Intent(this, AddEditEventActivity.class);
+                i.putExtra("event_id", eventId);
+                startActivity(i);
+            });
 
-        btnDelete.setOnClickListener(v -> confirmDelete());
+            btnDelete.setOnClickListener(v -> confirmDelete());
+        }
         btnBook.setOnClickListener(v -> toggleBooking());
         btnLike.setOnClickListener(v -> onLikeClicked());
         btnDislike.setOnClickListener(v -> onDislikeClicked());
