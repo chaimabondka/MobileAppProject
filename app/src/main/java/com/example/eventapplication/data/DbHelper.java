@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "authapp.db";
-    public static final int DB_VERSION = 3;
+    public static final int DB_VERSION = 7;
 
 
     public static final String T_USER = "users";
@@ -27,7 +27,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     C_EMAIL + " TEXT NOT NULL UNIQUE, " +
                     C_HASH + " TEXT NOT NULL, " +
                     C_SALT + " TEXT NOT NULL, " +
-                    C_CREATED + " INTEGER NOT NULL" +
+                    C_CREATED + " INTEGER NOT NULL, " +
+                    "role TEXT, " +
+                    "phone TEXT, " +
+                    "avatar_url TEXT, " +
+                    "age INTEGER, " +
+                    "address TEXT, " +
+                    "avatar_uri TEXT" +
                     ")";
 
 

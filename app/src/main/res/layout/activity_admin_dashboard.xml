@@ -22,8 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp"
+        app:cardCornerRadius="18dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="4dp"
         app:cardBackgroundColor="@color/colorSurface">
 
         <LinearLayout
@@ -32,7 +33,7 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- Total users -->
+            <!-- Total users row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,7 +150,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Events"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:drawableStart="@android:drawable/ic_menu_my_calendar"
+                    android:drawablePadding="8dp" />
 
                 <TextView
                     android:id="@+id/tvTotalEvents"
@@ -184,7 +187,7 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- 🔹 NEW: Reclamations card -->
+    <!-- 🔹 Reclamations card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -209,7 +212,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Reclamations"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:drawableStart="@android:drawable/ic_menu_info_details"
+                    android:drawablePadding="8dp" />
 
                 <TextView
                     android:id="@+id/tvTotalReclamations"
@@ -254,34 +259,77 @@
                 android:backgroundTint="#6D3EFF" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <!-- Monthly events vs reservations chart card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:cardCornerRadius="18dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="4dp"
         app:cardBackgroundColor="@color/colorSurface">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="12dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Users"
-                android:textStyle="bold"
-                android:textColor="@color/colorOnSurface"
-                android:layout_marginBottom="8dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvUsers"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_sort_by_size"
+                    android:tint="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Events vs Reservations"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorOnSurface" />
+
+                <ImageButton
+                    android:id="@+id/btnPrevMonth"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@android:color/transparent"
+                    android:src="@android:drawable/ic_media_previous"
+                    android:contentDescription="Previous month" />
+
+                <TextView
+                    android:id="@+id/tvCurrentMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:text="Jan 2025"
+                    android:textColor="@color/colorOnSurfaceVariant" />
+
+                <ImageButton
+                    android:id="@+id/btnNextMonth"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@android:color/transparent"
+                    android:src="@android:drawable/ic_media_next"
+                    android:contentDescription="Next month" />
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChartMonthly"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="220dp"
+                android:layout_marginTop="8dp" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Users list moved to "Manage Users" screen accessed from the sidebar -->
 </LinearLayout>

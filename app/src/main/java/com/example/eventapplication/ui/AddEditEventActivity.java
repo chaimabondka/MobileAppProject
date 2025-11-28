@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eventapplication.R;
+import com.example.eventapplication.auth.SessionManager;
 import com.example.eventapplication.data.Event;
 import com.example.eventapplication.data.EventDao;
 
@@ -46,6 +47,14 @@ public class AddEditEventActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_event);
+
+        // Only admins can add or edit events
+        SessionManager session = new SessionManager(this);
+        if (!session.isAdmin()) {
+            Toast.makeText(this, "Only administrators can manage events", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         dao = new EventDao(this);
 
