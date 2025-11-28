@@ -1,8 +1,10 @@
 package com.example.eventapplication.ui;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,16 +51,35 @@ public class EventSliderAdapter extends RecyclerView.Adapter<EventSliderAdapter.
     static class Holder extends RecyclerView.ViewHolder {
 
         TextView tvDate, tvTitle;
+        ImageView ivImage;
 
         Holder(@NonNull View itemView) {
             super(itemView);
             tvDate = itemView.findViewById(R.id.tvSliderDate);
             tvTitle = itemView.findViewById(R.id.tvSliderTitle);
+            ivImage = itemView.findViewById(R.id.ivSliderImage);
         }
 
         void bind(Event e, OnEventClick listener) {
             tvDate.setText(e.date != null ? e.date : "");
             tvTitle.setText(e.title != null ? e.title : "");
+
+            if (e.imageUri != null && !e.imageUri.isEmpty()) {
+                try {
+                    ivImage.setImageURI(Uri.parse(e.imageUri));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    if (e.imageResId != 0) {
+                        ivImage.setImageResource(e.imageResId);
+                    } else {
+                        ivImage.setImageResource(R.drawable.ic_event_placeholder);
+                    }
+                }
+            } else if (e.imageResId != 0) {
+                ivImage.setImageResource(e.imageResId);
+            } else {
+                ivImage.setImageResource(R.drawable.ic_event_placeholder);
+            }
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) listener.onClick(e);
