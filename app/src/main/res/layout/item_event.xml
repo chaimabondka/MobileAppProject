@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_event_placeholder" />
 
         <LinearLayout
             android:layout_width="match_parent"

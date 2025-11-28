@@ -84,10 +84,17 @@ public class SignInActivity extends AppCompatActivity {
                         return;
                     }
 
+                    // If no admin exists yet, promote this first logged-in user to ADMIN
+                    if (!userDao.hasAdmin()) {
+                        u.role = "ADMIN";
+                        userDao.update(u);
+                    }
+
                     // Save in Session
                     SessionManager session = new SessionManager(this);
                     session.login(String.valueOf(u.id), u.name, u.email);
 
+                    // Always go to Home; admins can reach dashboard from bottom nav
                     startActivity(new Intent(this, HomeActivity.class));
                     finish();
                 });

@@ -2,4 +2,36 @@
     <string name="app_name">EventApplication</string>
     <string name="google_maps_key">AIzaSyDhJ1QaIMu0XptyDLOUSs1YzQ4SmH7jVG8</string>
 
+    <!-- Reclamation Module Strings -->
+    <string name="reclamation_title">Title</string>
+    <string name="reclamation_description">Description</string>
+    <string name="submit_reclamation">Submit Reclamation</string>
+    <string name="reclamation_submitted">Reclamation submitted successfully</string>
+    <string name="error_empty_fields">Please fill in all fields</string>
+    <string name="reclamations">Reclamations</string>
+    <string name="my_reclamations">My Reclamations</string>
+    <string name="no_reclamations">No reclamations found</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_in_progress">In Progress</string>
+    <string name="status_resolved">Resolved</string>
+    <string name="admin_response">Admin Response</string>
+    <string name="filter_reclamations">Filter reclamations</string>
+    <string name="add_reclamation">Add reclamation</string>
+    <string name="all">All</string>
+    <string name="pending">Pending</string>
+    <string name="in_progress">In Progress</string>
+    <string name="resolved">Resolved</string>
+    <string name="response_hint">Type your response here...</string>
+    <string name="update_status">Update Status</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="reclamation_details">Reclamation Details</string>
+    <string name="created_on">Created on: %1$s</string>
+    <string name="status">Status: %1$s</string>
+    <string name="response_saved">Response saved successfully</string>
+    <string name="error_saving_response">Error saving response</string>
+    <string name="error_loading_reclamations">Error loading reclamations</string>
+    <string name="error_submitting_reclamation">Error submitting reclamation</string>
+    <string name="view_details">View Details</string>
+    <string name="no_response">No response yet</string>
 </resources>

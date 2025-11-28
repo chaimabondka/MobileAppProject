@@ -214,8 +214,19 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         tvSubtitle.setText(event.subtitle);
         tvLocation.setText(event.location);
         tvDescription.setText(event.description);
-
-        if (event.imageResId != 0) {
+        // Prefer URI image picked from gallery, fall back to resource / placeholder
+        if (event.imageUri != null && !event.imageUri.isEmpty()) {
+            try {
+                ivEventImage.setImageURI(android.net.Uri.parse(event.imageUri));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                if (event.imageResId != 0) {
+                    ivEventImage.setImageResource(event.imageResId);
+                } else {
+                    ivEventImage.setImageResource(R.drawable.ic_event_placeholder);
+                }
+            }
+        } else if (event.imageResId != 0) {
             ivEventImage.setImageResource(event.imageResId);
         } else {
             ivEventImage.setImageResource(R.drawable.ic_event_placeholder);

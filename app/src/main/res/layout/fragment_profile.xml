@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:padding="16dp">
 
     <LinearLayout
@@ -19,7 +20,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_person"
-        android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name" />
 
         <!-- Optional small title -->
         <TextView
@@ -38,7 +39,8 @@
             android:layout_margin="8dp"
             app:cardCornerRadius="12dp"
             app:cardUseCompatPadding="true"
-            app:cardElevation="2dp">
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="@color/colorSurface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -131,7 +133,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Save"
-            app:cornerRadius="24dp" />
+            app:cornerRadius="24dp"
+            app:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorOnPrimary" />
+
+        <!-- Sign out button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignOut"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Sign out"
+            android:textAllCaps="false"
+            app:strokeColor="@color/colorError"
+            android:textColor="@color/colorError" />
     </LinearLayout>
 
 </ScrollView>

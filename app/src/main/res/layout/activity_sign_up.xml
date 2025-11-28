@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:padding="20dp">
 
     <LinearLayout
@@ -16,7 +17,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_gravity="center_horizontal"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_person"
             android:contentDescription="Profile picture"
             android:scaleType="centerCrop"
             android:layout_marginBottom="12dp" />
@@ -26,7 +27,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose Profile Photo"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            app:iconTint="@color/colorPrimary"
+            android:textColor="@color/colorPrimary" />
 
         <!-- Name -->
         <com.google.android.material.textfield.TextInputLayout
@@ -135,13 +138,18 @@
             android:id="@+id/btnCreateAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create account" />
+            android:text="Create account"
+            app:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorOnPrimary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGoLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Already have an account? Sign in" />
+            android:text="Already have an account? Sign in"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:strokeColor="@color/colorPrimary"
+            android:textColor="@color/colorPrimary" />
 
     </LinearLayout>
 </ScrollView>

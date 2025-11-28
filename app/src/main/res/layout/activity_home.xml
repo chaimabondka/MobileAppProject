@@ -9,8 +9,7 @@
     <FrameLayout
         android:id="@+id/homeFragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomNav" />
+        android:layout_height="match_parent" />
 
     <!-- Bottom navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -18,10 +17,10 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_gravity="bottom"
-        android:background="@android:color/white"
+        android:background="@color/colorSurface"
         app:labelVisibilityMode="labeled"
-        app:itemIconTint="@color/design_default_color_primary"
-        app:itemTextColor="@color/design_default_color_primary"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorPrimary"
         app:menu="@menu/menu_bottom_nav" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

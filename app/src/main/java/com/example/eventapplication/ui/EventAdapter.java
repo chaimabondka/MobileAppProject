@@ -48,7 +48,23 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.title.setText(e.title);
         holder.date.setText(e.date);
         holder.subtitle.setText(e.subtitle);
-        holder.image.setImageResource(e.imageResId);
+        // Prefer runtime image URI if available, otherwise fall back to resource / placeholder
+        if (e.imageUri != null && !e.imageUri.isEmpty()) {
+            try {
+                holder.image.setImageURI(android.net.Uri.parse(e.imageUri));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                if (e.imageResId != 0) {
+                    holder.image.setImageResource(e.imageResId);
+                } else {
+                    holder.image.setImageResource(R.drawable.ic_event_placeholder);
+                }
+            }
+        } else if (e.imageResId != 0) {
+            holder.image.setImageResource(e.imageResId);
+        } else {
+            holder.image.setImageResource(R.drawable.ic_event_placeholder);
+        }
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onEventClick(e);
         });

@@ -96,6 +96,20 @@ public class EventDao {
         return list;
     }
 
+    // ADMIN HELPERS
+    public int countEvents() {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM " + EventDbHelper.TABLE_EVENTS, null);
+        try {
+            if (c.moveToFirst()) {
+                return c.getInt(0);
+            }
+            return 0;
+        } finally {
+            c.close();
+        }
+    }
+
     private Event fromCursor(Cursor c) {
         Event e = new Event();
         e.id = c.getLong(c.getColumnIndexOrThrow("id"));

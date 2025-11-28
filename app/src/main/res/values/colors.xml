@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Brand / primary palette -->
+    <color name="colorPrimary">#4F46E5</color>        <!-- Indigo 600 -->
+    <color name="colorPrimaryDark">#3730A3</color>   <!-- Indigo 800 -->
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+
+    <color name="colorSecondary">#06B6D4</color>      <!-- Cyan 500 -->
+    <color name="colorOnSecondary">#FFFFFFFF</color>
+
+    <!-- Background / surface -->
+    <color name="colorBackground">#F3F4F6</color>     <!-- Neutral 100 -->
+    <color name="colorSurface">#FFFFFFFF</color>
+    <color name="colorOnSurface">#111827</color>     <!-- Neutral 900 -->
+    <color name="colorOnSurfaceVariant">#6B7280</color> <!-- Neutral 500 -->
+
+    <!-- Error -->
+    <color name="colorError">#DC2626</color>
+    <color name="colorOnError">#FFFFFFFF</color>
+
+    <!-- Generic black/white for compatibility -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

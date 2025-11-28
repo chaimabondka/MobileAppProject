@@ -13,14 +13,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventapplication.R;
 import com.example.eventapplication.data.Event;
 import com.example.eventapplication.data.EventDao;
+import com.example.eventapplication.data.LikesRepository;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DiscoverFragment extends Fragment {
@@ -29,11 +34,21 @@ public class DiscoverFragment extends Fragment {
     private EventAdapter verticalAdapter;
     private EventSliderAdapter sliderAdapter;
     private EventDao dao;
+    private LikesRepository likesRepo;
 
     private final List<Event> allEvents = new ArrayList<>();
     private final List<Event> filteredEvents = new ArrayList<>();
+    private final List<Event> sliderEvents = new ArrayList<>();
 
     private EditText etSearch;
+    private ChipGroup chipContainer;
+    private Chip chipAll, chipToday, chipWeek, chipPopular;
+
+    private static final int FILTER_ALL = 0;
+    private static final int FILTER_TODAY = 1;
+    private static final int FILTER_WEEK = 2;
+    private static final int FILTER_POPULAR = 3;
+    private int currentFilter = FILTER_ALL;
 
     @Nullable
     @Override
@@ -46,22 +61,45 @@ public class DiscoverFragment extends Fragment {
         rvSlider = v.findViewById(R.id.rvSlider);
         rvEvents = v.findViewById(R.id.rvEvents);
         etSearch = v.findViewById(R.id.etSearch);
+        chipContainer = v.findViewById(R.id.chipContainer);
+        chipAll = v.findViewById(R.id.chipAll);
+        chipToday = v.findViewById(R.id.chipToday);
+        chipWeek = v.findViewById(R.id.chipWeek);
+        chipPopular = v.findViewById(R.id.chipPopular);
         FloatingActionButton fabAdd = v.findViewById(R.id.fabAddEvent);
 
         dao = new EventDao(requireContext());
+        likesRepo = new LikesRepository(requireContext());
 
         // 1) Layout managers
         rvSlider.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
-        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvEvents.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         // 2) Adapters created ONCE with the lists
-        sliderAdapter = new EventSliderAdapter(allEvents, this::openEventDetail);
+        sliderAdapter = new EventSliderAdapter(sliderEvents, this::openEventDetail);
         rvSlider.setAdapter(sliderAdapter);
 
         verticalAdapter = new EventAdapter(filteredEvents, this::openEventDetail);
         rvEvents.setAdapter(verticalAdapter);
+
+        // Chips: date / popularity filters for main list
+        if (chipAll != null) chipAll.setChecked(true);
+        if (chipContainer != null) {
+            chipContainer.setOnCheckedStateChangeListener((group, checkedIds) -> {
+                int filter = FILTER_ALL;
+                int id = checkedIds.isEmpty() ? R.id.chipAll : checkedIds.get(0);
+                if (id == R.id.chipToday) filter = FILTER_TODAY;
+                else if (id == R.id.chipWeek) filter = FILTER_WEEK;
+                else if (id == R.id.chipPopular) filter = FILTER_POPULAR;
+                else filter = FILTER_ALL;
+                currentFilter = filter;
+                String q = etSearch != null ? etSearch.getText().toString() : "";
+                applyFilter(q);
+                verticalAdapter.notifyDataSetChanged();
+            });
+        }
 
         // 3) Initial load
         loadEventsFromDb();
@@ -98,7 +136,17 @@ public class DiscoverFragment extends Fragment {
         allEvents.clear();
         allEvents.addAll(dbEvents);
 
-        // Re-apply current search filter to filteredEvents
+        // Build slider list: only events where likes > dislikes
+        sliderEvents.clear();
+        for (Event e : allEvents) {
+            int likes = likesRepo.getLikesCount(e.id);
+            int dislikes = likesRepo.getDislikesCount(e.id);
+            if (likes > dislikes) {
+                sliderEvents.add(e);
+            }
+        }
+
+        // Re-apply current search + chip filter to filteredEvents
         String q = etSearch != null ? etSearch.getText().toString() : "";
         applyFilter(q);
 
@@ -116,16 +164,50 @@ public class DiscoverFragment extends Fragment {
         String q = query == null ? "" : query.trim().toLowerCase();
         filteredEvents.clear();
 
-        if (q.isEmpty()) {
-            filteredEvents.addAll(allEvents);
-        } else {
-            for (Event e : allEvents) {
-                if ((e.title != null && e.title.toLowerCase().contains(q)) ||
-                        (e.subtitle != null && e.subtitle.toLowerCase().contains(q)) ||
-                        (e.location != null && e.location.toLowerCase().contains(q))) {
+        long now = System.currentTimeMillis();
 
-                    filteredEvents.add(e);
-                }
+        // Start of today
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(now);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        long startOfToday = cal.getTimeInMillis();
+        long startOfTomorrow = startOfToday + 24L * 60L * 60L * 1000L;
+        long endOfWeek = startOfToday + 7L * 24L * 60L * 60L * 1000L;
+
+        for (Event e : allEvents) {
+            boolean matchesSearch = q.isEmpty()
+                    || (e.title != null && e.title.toLowerCase().contains(q))
+                    || (e.subtitle != null && e.subtitle.toLowerCase().contains(q))
+                    || (e.location != null && e.location.toLowerCase().contains(q));
+
+            if (!matchesSearch) continue;
+
+            boolean matchesFilter = true;
+            long ts = e.eventTimestamp;
+
+            switch (currentFilter) {
+                case FILTER_TODAY:
+                    matchesFilter = ts >= startOfToday && ts < startOfTomorrow;
+                    break;
+                case FILTER_WEEK:
+                    matchesFilter = ts >= startOfToday && ts < endOfWeek;
+                    break;
+                case FILTER_POPULAR:
+                    int likes = likesRepo.getLikesCount(e.id);
+                    int dislikes = likesRepo.getDislikesCount(e.id);
+                    matchesFilter = likes > dislikes;
+                    break;
+                case FILTER_ALL:
+                default:
+                    matchesFilter = true;
+                    break;
+            }
+
+            if (matchesFilter) {
+                filteredEvents.add(e);
             }
         }
     }

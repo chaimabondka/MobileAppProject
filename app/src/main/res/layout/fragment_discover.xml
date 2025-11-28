@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F7"
+    android:background="@color/colorBackground"
     android:padding="16dp">
 
     <!-- Title -->
@@ -16,7 +16,7 @@
         android:text="Discover"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:textColor="#111111"
+        android:textColor="@color/colorOnSurface"
         android:layout_marginBottom="12dp" />
 
     <!-- Search bar -->
@@ -56,16 +56,19 @@
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chipToday"
                 android:text="Today"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chipWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Week"/>
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chipPopular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Popular"/>
@@ -74,19 +77,65 @@
 
     </HorizontalScrollView>
 
-    <!-- Horizontal slider -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSlider"
+    <!-- Popular events label -->
+    <TextView
+        android:id="@+id/tvPopularLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Popular events"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/colorOnSurface"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Popular events slider section -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:paddingBottom="20dp" />
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="1dp"
+        app:cardBackgroundColor="@color/colorSurface">
 
-    <!-- Main event list -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvEvents"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSlider"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="4dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Main event list label -->
+    <TextView
+        android:id="@+id/tvAllEventsLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="All events"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/colorOnSurface"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Main event list section -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginTop="2dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="1dp"
+        app:cardBackgroundColor="@color/colorSurface">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEvents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
