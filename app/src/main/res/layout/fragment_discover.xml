@@ -73,6 +73,13 @@
                 android:layout_height="wrap_content"
                 android:text="Popular"/>
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="By date"
+                android:checkable="true"/>
+
         </com.google.android.material.chip.ChipGroup>
 
     </HorizontalScrollView>

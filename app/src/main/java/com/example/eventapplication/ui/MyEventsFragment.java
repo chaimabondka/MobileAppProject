@@ -1,5 +1,6 @@
 package com.example.eventapplication.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +58,10 @@ public class MyEventsFragment extends Fragment {
         }
 
         adapter = new EventAdapter(events, event -> {
-            // Open event detail
+            if (event == null) return;
+            Intent i = new Intent(requireContext(), EventDetailActivity.class);
+            i.putExtra("event_id", event.id);
+            startActivity(i);
         });
 
         rvMyEvents.setAdapter(adapter);

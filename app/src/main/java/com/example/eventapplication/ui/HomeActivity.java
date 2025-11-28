@@ -26,14 +26,19 @@ public class HomeActivity extends AppCompatActivity {
         // Determine if current user is ADMIN
         SessionManager session = new SessionManager(this);
         UserDao userDao = new UserDao(this);
-        boolean isAdmin;
-        String email = session.getEmail();
-        if (email != null) {
-            User u = userDao.findByEmail(email);
-            isAdmin = (u != null && "ADMIN".equalsIgnoreCase(u.role));
-        } else {
-            isAdmin = false;
+
+        boolean isAdmin = session.isAdmin();
+
+        // Fallback for older sessions without role stored
+        if (!isAdmin) {
+            String email = session.getEmail();
+            if (email != null) {
+                User u = userDao.findByEmail(email);
+                isAdmin = (u != null && "ADMIN".equalsIgnoreCase(u.role));
+            }
         }
+
+        final boolean isAdminUser = isAdmin;
 
         // Hide admin item for non-admin users
         Menu menu = bottomNav.getMenu();
@@ -58,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
             } else if (id == R.id.nav_profile) {
                 loadFragment(new ProfileFragment());
                 return true;
-            } else if (id == R.id.nav_admin && isAdmin) {
+            } else if (id == R.id.nav_admin && isAdminUser) {
                 loadFragment(new AdminDashboardFragment());
                 return true;
             }

@@ -90,9 +90,9 @@ public class SignInActivity extends AppCompatActivity {
                         userDao.update(u);
                     }
 
-                    // Save in Session
+                    // Save in Session including role
                     SessionManager session = new SessionManager(this);
-                    session.login(String.valueOf(u.id), u.name, u.email);
+                    session.login(String.valueOf(u.id), u.name, u.email, u.role);
 
                     // Always go to Home; admins can reach dashboard from bottom nav
                     startActivity(new Intent(this, HomeActivity.class));
