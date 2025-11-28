@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,10 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventapplication.R;
+import com.example.eventapplication.ui.ReclamationAdminActivity;
 import com.example.eventapplication.data.EventDao;
 import com.example.eventapplication.data.EventDbHelper;
 import com.example.eventapplication.data.User;
 import com.example.eventapplication.data.UserDao;
+import com.example.eventapplication.data.ReclamationDao;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,6 +33,8 @@ public class AdminDashboardFragment extends Fragment implements AdminUserAdapter
     private RecyclerView rvUsers;
     private UserDao userDao;
     private EventDao eventDao;
+    private TextView tvTotalReclamations, tvPendingReclamations;
+    private ReclamationDao reclamationDao;
 
     @Nullable
     @Override
@@ -45,6 +50,7 @@ public class AdminDashboardFragment extends Fragment implements AdminUserAdapter
 
         userDao = new UserDao(requireContext());
         eventDao = new EventDao(requireContext());
+        reclamationDao = new ReclamationDao(requireContext());
 
         tvTotalUsers = view.findViewById(R.id.tvTotalUsers);
         tvTotalEvents = view.findViewById(R.id.tvTotalEvents);
@@ -53,6 +59,17 @@ public class AdminDashboardFragment extends Fragment implements AdminUserAdapter
         tvOrganizers = view.findViewById(R.id.tvOrganizers);
         tvAttendees = view.findViewById(R.id.tvAttendees);
         rvUsers = view.findViewById(R.id.rvUsers);
+
+        tvTotalReclamations = view.findViewById(R.id.tvTotalReclamations);
+        tvPendingReclamations = view.findViewById(R.id.tvPendingReclamations);
+
+        View btnManageReclamations = view.findViewById(R.id.btnManageReclamations);
+        if (btnManageReclamations != null) {
+            btnManageReclamations.setOnClickListener(v -> {
+                Intent i = new Intent(requireContext(), ReclamationAdminActivity.class);
+                startActivity(i);
+            });
+        }
 
         rvUsers.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -68,6 +85,16 @@ public class AdminDashboardFragment extends Fragment implements AdminUserAdapter
         tvTotalUsers.setText(String.valueOf(users));
         tvTotalEvents.setText(String.valueOf(events));
         tvTotalBookings.setText(String.valueOf(bookings));
+
+        int totalRecl = reclamationDao.countAll();
+        int pendingRecl = reclamationDao.countPending();
+
+        if (tvTotalReclamations != null) {
+            tvTotalReclamations.setText(String.valueOf(totalRecl));
+        }
+        if (tvPendingReclamations != null) {
+            tvPendingReclamations.setText(String.valueOf(pendingRecl));
+        }
 
         int admins = userDao.countByRole("ADMIN");
         int organizers = userDao.countByRole("ORGANIZER");

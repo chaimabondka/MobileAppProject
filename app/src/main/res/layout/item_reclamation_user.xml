@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@color/colorSurface"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvReclTitleUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="Title" />
+
+    <TextView
+        android:id="@+id/tvReclStatusUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Pending" />
+
+    <TextView
+        android:id="@+id/tvReclDateUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Date" />
+
+    <TextView
+        android:id="@+id/tvReclDescriptionUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Description" />
+
+    <TextView
+        android:id="@+id/tvReclResponseUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Admin response"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -19,6 +19,8 @@ import com.example.eventapplication.auth.SessionManager;
 import com.example.eventapplication.data.User;
 import com.example.eventapplication.data.UserDao;
 import com.google.firebase.auth.FirebaseAuth;
+import com.example.eventapplication.ui.NewReclamationActivity;
+import com.example.eventapplication.ui.MyReclamationsActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -55,6 +57,8 @@ public class ProfileFragment extends Fragment {
         imgAvatar = view.findViewById(R.id.imgAvatar);
         btnSave = view.findViewById(R.id.btnSave);
         Button btnSignOut = view.findViewById(R.id.btnSignOut);
+        Button btnNewReclamation = view.findViewById(R.id.btnNewReclamation);
+        Button btnMyReclamations = view.findViewById(R.id.btnMyReclamations);
 
         loadUserData();
 
@@ -69,6 +73,16 @@ public class ProfileFragment extends Fragment {
             // Navigate back to sign-in screen and clear back stack
             Intent i = new Intent(requireContext(), SignInActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        });
+
+        btnNewReclamation.setOnClickListener(v -> {
+            Intent i = new Intent(requireContext(), NewReclamationActivity.class);
+            startActivity(i);
+        });
+
+        btnMyReclamations.setOnClickListener(v -> {
+            Intent i = new Intent(requireContext(), MyReclamationsActivity.class);
             startActivity(i);
         });
     }

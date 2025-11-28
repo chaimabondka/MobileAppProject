@@ -14,11 +14,18 @@ public class SessionManager {
     }
 
     public void login(String userId, String name, String email) {
-        prefs.edit()
+        login(userId, name, email, null);
+    }
+
+    public void login(String userId, String name, String email, String role) {
+        SharedPreferences.Editor editor = prefs.edit()
                 .putString("user_id", userId)
                 .putString("name", name)
-                .putString("email", email)
-                .apply();
+                .putString("email", email);
+        if (role != null) {
+            editor.putString("role", role);
+        }
+        editor.apply();
     }
 
     public void logout() {
@@ -35,6 +42,15 @@ public class SessionManager {
 
     public String getEmail() {
         return prefs.getString("email", null);
+    }
+
+    public String getRole() {
+        return prefs.getString("role", null);
+    }
+
+    public boolean isAdmin() {
+        String role = getRole();
+        return role != null && "ADMIN".equalsIgnoreCase(role);
     }
 
     public boolean isLoggedIn() {

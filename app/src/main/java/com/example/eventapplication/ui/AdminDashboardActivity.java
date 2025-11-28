@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventapplication.R;
+import com.example.eventapplication.auth.SessionManager;
 import com.example.eventapplication.data.EventDao;
 import com.example.eventapplication.data.EventDbHelper;
 import com.example.eventapplication.data.User;
@@ -33,6 +34,13 @@ public class AdminDashboardActivity extends AppCompatActivity implements AdminUs
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SessionManager session = new SessionManager(this);
+        if (!session.isLoggedIn() || !session.isAdmin()) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_admin_dashboard);
 
         userDao = new UserDao(this);

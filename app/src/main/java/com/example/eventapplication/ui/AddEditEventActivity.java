@@ -177,6 +177,16 @@ public class AddEditEventActivity extends AppCompatActivity {
         e.description = etDescription.getText().toString().trim();
         e.lat = eventLat;
         e.lng = eventLng;
+
+        // Ensure eventTimestamp is set so time-based filters (today/week) work
+        if (eventTimestamp == 0L && !TextUtils.isEmpty(e.date)) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                eventTimestamp = sdf.parse(e.date).getTime();
+            } catch (Exception ignored) {
+                eventTimestamp = System.currentTimeMillis();
+            }
+        }
         e.eventTimestamp = eventTimestamp;
         e.maxPlaces = maxPlaces;
 
