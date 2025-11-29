@@ -8,12 +8,13 @@ public class EventDbHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "events.db";
     // BUMP VERSION when schema changes
-    public static final int DB_VERSION = 6;
+    public static final int DB_VERSION = 7;
 
     public static final String TABLE_EVENTS    = "events";
     public static final String TABLE_BOOKINGS  = "bookings";
     public static final String TABLE_COMMENTS  = "comments";
     public static final String TABLE_LIKES     = "likes";
+    public static final String TABLE_TICKETS   = "tickets";
 
     // Full, correct schema for events
     private static final String CREATE_TABLE_EVENTS =
@@ -37,6 +38,17 @@ public class EventDbHelper extends SQLiteOpenHelper {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "event_id INTEGER," +
                     "user_email TEXT" +
+                    ");";
+
+    private static final String CREATE_TABLE_TICKETS =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_TICKETS + " (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "booking_id INTEGER NOT NULL," +
+                    "user_id TEXT NOT NULL," +
+                    "event_id INTEGER NOT NULL," +
+                    "qr_payload TEXT NOT NULL," +
+                    "created_at INTEGER," +
+                    "checked_in_at INTEGER" +
                     ");";
 
     private static final String CREATE_TABLE_COMMENTS =
@@ -69,11 +81,13 @@ public class EventDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_BOOKINGS);
         db.execSQL(CREATE_TABLE_COMMENTS);
         db.execSQL(CREATE_TABLE_LIKES);
+        db.execSQL(CREATE_TABLE_TICKETS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // For development: just drop and recreate everything
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TICKETS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LIKES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMENTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKINGS);
