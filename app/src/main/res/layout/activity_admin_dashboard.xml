@@ -360,3 +360,5 @@
 
     <!-- Users list moved to "Manage Users" screen accessed from the sidebar -->
 </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

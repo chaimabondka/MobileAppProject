@@ -27,7 +27,7 @@ import java.util.Locale;
 public class AddEditEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDate, etSubtitle, etLocation, etDescription, etCapacity;
-    private TextView tvFormTitle;
+    private com.google.android.material.appbar.MaterialToolbar toolbar;
     private Button btnPickLocation, btnPickImage;
 
     private ImageView ivEventImagePreview;
@@ -58,7 +58,12 @@ public class AddEditEventActivity extends AppCompatActivity {
 
         dao = new EventDao(this);
 
-        tvFormTitle = findViewById(R.id.tvFormTitle);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         etTitle = findViewById(R.id.etEventTitle);
         etDate = findViewById(R.id.etEventDate);
         etSubtitle = findViewById(R.id.etEventSubtitle);
@@ -76,8 +81,14 @@ public class AddEditEventActivity extends AppCompatActivity {
         if (getIntent() != null && getIntent().hasExtra("event_id")) {
             eventId = getIntent().getLongExtra("event_id", -1);
             if (eventId != -1) {
-                tvFormTitle.setText("Edit Event");
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle("Edit Event");
+                }
                 loadEvent(eventId);
+            }
+        } else {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("Add New Event");
             }
         }
 

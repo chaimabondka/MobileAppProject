@@ -42,15 +42,20 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.Hold
         User u = users.get(position);
         h.tvName.setText(u.name);
         h.tvEmail.setText(u.email);
-        h.tvRole.setText(u.role);
+        h.chipUserRole.setText(u.role);
 
-        h.btnMakeAdmin.setOnClickListener(v -> {
+        // Set checked state based on current role
+        h.chipAdmin.setChecked(u.role.equals("ADMIN"));
+        h.chipOrganizer.setChecked(u.role.equals("ORGANIZER"));
+        h.chipAttendee.setChecked(u.role.equals("ATTENDEE"));
+
+        h.chipAdmin.setOnClickListener(v -> {
             if (listener != null) listener.onRoleChange(u, "ADMIN");
         });
-        h.btnMakeOrganizer.setOnClickListener(v -> {
+        h.chipOrganizer.setOnClickListener(v -> {
             if (listener != null) listener.onRoleChange(u, "ORGANIZER");
         });
-        h.btnMakeAttendee.setOnClickListener(v -> {
+        h.chipAttendee.setOnClickListener(v -> {
             if (listener != null) listener.onRoleChange(u, "ATTENDEE");
         });
 
@@ -65,17 +70,18 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.Hold
     }
 
     static class Holder extends RecyclerView.ViewHolder {
-        TextView tvName, tvEmail, tvRole;
-        MaterialButton btnMakeAdmin, btnMakeOrganizer, btnMakeAttendee, btnDelete;
+        TextView tvName, tvEmail;
+        com.google.android.material.chip.Chip chipUserRole, chipAdmin, chipOrganizer, chipAttendee;
+        MaterialButton btnDelete;
 
         Holder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvUserName);
             tvEmail = itemView.findViewById(R.id.tvUserEmail);
-            tvRole = itemView.findViewById(R.id.tvUserRole);
-            btnMakeAdmin = itemView.findViewById(R.id.btnMakeAdmin);
-            btnMakeOrganizer = itemView.findViewById(R.id.btnMakeOrganizer);
-            btnMakeAttendee = itemView.findViewById(R.id.btnMakeAttendee);
+            chipUserRole = itemView.findViewById(R.id.chipUserRole);
+            chipAdmin = itemView.findViewById(R.id.chipAdmin);
+            chipOrganizer = itemView.findViewById(R.id.chipOrganizer);
+            chipAttendee = itemView.findViewById(R.id.chipAttendee);
             btnDelete = itemView.findViewById(R.id.btnDeleteUser);
         }
     }

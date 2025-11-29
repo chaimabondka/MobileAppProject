@@ -12,7 +12,18 @@
     <color name="colorBackground">#F3F4F6</color>     <!-- Neutral 100 -->
     <color name="colorSurface">#FFFFFFFF</color>
     <color name="colorOnSurface">#111827</color>     <!-- Neutral 900 -->
-    <color name="colorOnSurfaceVariant">#6B7280</color> <!-- Neutral 500 -->
+
+    <!-- Primary Container -->
+    <color name="colorPrimaryContainer">#E0E7FF</color>  <!-- Indigo 100 -->
+    <color name="colorOnPrimaryContainer">#1E1B4B</color> <!-- Indigo 950 -->
+
+    <!-- Surface Variants -->
+    <color name="colorSurfaceVariant">#E5E7EB</color>    <!-- Neutral 200 -->
+    <color name="colorOnSurfaceVariant">#6B7280</color>  <!-- Neutral 500 -->
+
+    <!-- Outline -->
+    <color name="colorOutline">#9CA3AF</color>           <!-- Neutral 400 -->
+    <color name="colorOutlineVariant">#D1D5DB</color>    <!-- Neutral 300 -->
 
     <!-- Error -->
     <color name="colorError">#DC2626</color>
