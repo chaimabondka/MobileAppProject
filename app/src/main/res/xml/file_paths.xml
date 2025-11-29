@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Allow sharing files from app-specific external Documents dir -->
+    <external-files-path
+        name="external_documents"
+        path="." />
+    <!-- Fallback to internal files dir if external is unavailable -->
+    <files-path
+        name="internal_files"
+        path="." />
+</paths>

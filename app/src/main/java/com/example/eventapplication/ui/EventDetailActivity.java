@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -35,6 +36,11 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+
+import android.net.Uri;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -42,6 +48,10 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
+import androidx.core.content.FileProvider;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +78,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private ImageView ivEventImage;
     private ImageView ivTicketQr;
     private TextView tvTicketTitle;
-    private MaterialButton btnBook, btnEdit, btnDelete, btnSendComment;
+    private MaterialButton btnBook, btnEdit, btnDelete, btnSendComment, btnTicketPdf;
     private TextView tvTitle, tvDate, tvSubtitle, tvLocation, tvDescription;
     private ImageButton btnLike, btnDislike;
     private TextView tvLikesCount, tvDislikesCount;
@@ -151,6 +161,10 @@ public class EventDetailActivity extends AppCompatActivity {
         btnLike.setOnClickListener(v -> onLikeClicked());
         btnDislike.setOnClickListener(v -> onDislikeClicked());
         btnSendComment.setOnClickListener(v -> onSendComment());
+
+        if (btnTicketPdf != null) {
+            btnTicketPdf.setOnClickListener(v -> generateTicketPdf());
+        }
     }
 
 
@@ -189,12 +203,17 @@ public class EventDetailActivity extends AppCompatActivity {
         btnOpenInMaps = findViewById(R.id.btnOpenInMaps);
         ivTicketQr = findViewById(R.id.ivTicketQr);
         tvTicketTitle = findViewById(R.id.tvTicketTitle);
+        btnTicketPdf = findViewById(R.id.btnTicketPdf);
         mapPreview = findViewById(R.id.mapPreview);
         if (ivTicketQr != null) {
             ivTicketQr.setVisibility(android.view.View.GONE);
         }
         if (tvTicketTitle != null) {
             tvTicketTitle.setVisibility(View.GONE);
+        }
+
+        if (btnTicketPdf != null) {
+            btnTicketPdf.setVisibility(View.GONE);
         }
 
         if (mapPreview != null) {
@@ -258,8 +277,11 @@ public class EventDetailActivity extends AppCompatActivity {
         if (existing != null) {
             payload = existing.qrPayload;
         } else {
-            // Make payload human-readable and labeled
-            payload = "booking_id=" + bookingId + ";user_id=" + currentUserName + ";event_id=" + event.title;
+            // Make payload human-readable and friendly for scanners
+            payload = "Event ticket" + "\n" +
+                    "Booking ID: " + bookingId + "\n" +
+                    "User: " + currentUserName + "\n" +
+                    "Event: " + event.title;
             ticketDao.insert(bookingId, currentUserId, eventId, payload);
         }
 
@@ -274,6 +296,7 @@ public class EventDetailActivity extends AppCompatActivity {
         if (!bookingRepo.isBooked(eventId)) {
             ivTicketQr.setVisibility(android.view.View.GONE);
             if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            if (btnTicketPdf != null) btnTicketPdf.setVisibility(View.GONE);
             return;
         }
 
@@ -281,6 +304,7 @@ public class EventDetailActivity extends AppCompatActivity {
         if (ticketDao == null || currentUserId == null) {
             ivTicketQr.setVisibility(android.view.View.GONE);
             if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            if (btnTicketPdf != null) btnTicketPdf.setVisibility(View.GONE);
             return;
         }
 
@@ -302,6 +326,7 @@ public class EventDetailActivity extends AppCompatActivity {
         if (bookingId == -1L) {
             ivTicketQr.setVisibility(android.view.View.GONE);
             if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            if (btnTicketPdf != null) btnTicketPdf.setVisibility(View.GONE);
             return;
         }
 
@@ -309,10 +334,12 @@ public class EventDetailActivity extends AppCompatActivity {
         if (t == null) {
             ivTicketQr.setVisibility(android.view.View.GONE);
             if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            if (btnTicketPdf != null) btnTicketPdf.setVisibility(View.GONE);
             return;
         }
 
         renderQr(t.qrPayload);
+        if (btnTicketPdf != null) btnTicketPdf.setVisibility(View.VISIBLE);
     }
 
     private void renderQr(String payload) {
@@ -323,10 +350,100 @@ public class EventDetailActivity extends AppCompatActivity {
             ivTicketQr.setImageBitmap(bitmap);
             ivTicketQr.setVisibility(android.view.View.VISIBLE);
             if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.VISIBLE);
+            if (btnTicketPdf != null) btnTicketPdf.setVisibility(android.view.View.VISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
             ivTicketQr.setVisibility(android.view.View.GONE);
             if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            if (btnTicketPdf != null) btnTicketPdf.setVisibility(android.view.View.GONE);
+        }
+    }
+
+    private void generateTicketPdf() {
+        if (event == null || currentUserId == null) {
+            showSnack("You must be logged in and have a booking to get a ticket PDF.");
+            return;
+        }
+
+        // Look up latest booking id
+        EventDbHelper helper = new EventDbHelper(this);
+        android.database.sqlite.SQLiteDatabase db = helper.getReadableDatabase();
+        long bookingId = -1L;
+        android.database.Cursor c = db.rawQuery(
+                "SELECT id FROM " + EventDbHelper.TABLE_BOOKINGS + " WHERE event_id=? AND user_email=? ORDER BY id DESC LIMIT 1",
+                new String[]{String.valueOf(eventId), session.getEmail()}
+        );
+        try {
+            if (c.moveToFirst()) {
+                bookingId = c.getLong(0);
+            }
+        } finally {
+            c.close();
+        }
+
+        if (bookingId == -1L) {
+            showSnack("You must book this event to get a ticket PDF.");
+            return;
+        }
+
+        String fileName = "Ticket_" + bookingId + ".pdf";
+        File dir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        if (dir == null) dir = getFilesDir();
+        File file = new File(dir, fileName);
+
+        android.graphics.pdf.PdfDocument pdf = new android.graphics.pdf.PdfDocument();
+        android.graphics.pdf.PdfDocument.PageInfo pageInfo =
+                new android.graphics.pdf.PdfDocument.PageInfo.Builder(595, 842, 1).create();
+        android.graphics.pdf.PdfDocument.Page page = pdf.startPage(pageInfo);
+
+        Canvas canvas = page.getCanvas();
+        Paint titlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        titlePaint.setTextSize(22f);
+        titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setTextSize(16f);
+
+        int x = 48;
+        int y = 80;
+
+        canvas.drawText("Event ticket", x, y, titlePaint);
+        y += 40;
+
+        canvas.drawText("Booking ID: " + bookingId, x, y, textPaint); y += 28;
+        canvas.drawText("User: " + currentUserName, x, y, textPaint); y += 28;
+        canvas.drawText("Event: " + event.title, x, y, textPaint); y += 28;
+        if (event.date != null) {
+            canvas.drawText("Date: " + event.date, x, y, textPaint); y += 28;
+        }
+        if (event.location != null) {
+            canvas.drawText("Location: " + event.location, x, y, textPaint); y += 28;
+        }
+
+        pdf.finishPage(page);
+
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            pdf.writeTo(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showSnack("Failed to create PDF ticket");
+            pdf.close();
+            return;
+        }
+
+        pdf.close();
+
+        Uri uri = FileProvider.getUriForFile(this,
+                getPackageName() + ".fileprovider", file);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        try {
+            startActivity(Intent.createChooser(intent, "Open ticket PDF"));
+        } catch (Exception e) {
+            showSnack("No PDF viewer installed");
         }
     }
 

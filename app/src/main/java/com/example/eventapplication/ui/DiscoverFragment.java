@@ -226,8 +226,28 @@ public class DiscoverFragment extends Fragment {
             boolean matchesFilter = true;
             long ts = e.eventTimestamp;
 
-            // Skip date-based filters if timestamp is invalid
+            // Derive timestamp from pretty date string if missing
             boolean hasValidTs = ts > 0L;
+            if (!hasValidTs && e.date != null && !e.date.isEmpty()) {
+                // Try both short and long month formats, in device locale and English
+                String[] patterns = {"dd MMM yyyy", "dd MMMM yyyy"};
+                Locale[] locales = {Locale.getDefault(), Locale.ENGLISH};
+                outer:
+                for (Locale loc : locales) {
+                    for (String pattern : patterns) {
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat(pattern, loc);
+                            Date d = sdf.parse(e.date);
+                            if (d != null) {
+                                ts = d.getTime();
+                                hasValidTs = true;
+                                break outer;
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }
+            }
 
             // Normalize event timestamp to start-of-day bucket
             long eventDayStart = 0L;
@@ -252,7 +272,8 @@ public class DiscoverFragment extends Fragment {
                     if (selectedDateStart > 0L && selectedDateEnd > 0L && hasValidTs) {
                         matchesFilter = (eventDayStart >= selectedDateStart && eventDayStart < selectedDateEnd);
                     } else {
-                        matchesFilter = true;
+                        // If we don't have a valid timestamp, exclude from date-based views
+                        matchesFilter = false;
                     }
                     break;
                 case FILTER_POPULAR:
