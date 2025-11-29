@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base background color -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorBackground" />
+        </shape>
+    </item>
+
+    <!-- Soft gradient blob behind the card (top-right) -->
+    <item android:gravity="top|end" android:top="-80dp" android:right="-40dp">
+        <shape android:shape="oval">
+            <size android:width="260dp" android:height="260dp" />
+            <!-- semi-transparent primary -->
+            <gradient
+                android:type="radial"
+                android:gradientRadius="180dp"
+                android:centerX="0.7"
+                android:centerY="0.3"
+                android:startColor="#334F46E5"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Soft gradient blob behind the card (bottom-left) -->
+    <item android:gravity="bottom|start" android:bottom="-80dp" android:left="-40dp">
+        <shape android:shape="oval">
+            <size android:width="220dp" android:height="220dp" />
+            <!-- semi-transparent secondary -->
+            <gradient
+                android:type="radial"
+                android:gradientRadius="160dp"
+                android:centerX="0.3"
+                android:centerY="0.7"
+                android:startColor="#3306B6D4"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+</layer-list>
