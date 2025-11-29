@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryContainer"
+    android:padding="24dp"
+    android:gravity="bottom"
+    android:theme="@style/ThemeOverlay.Material3.Dark">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="3dp"
+        app:strokeColor="@color/colorOnPrimaryContainer"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/navHeaderAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_person"
+            tools:ignore="ContentDescription" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/navHeaderName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin User"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorOnPrimaryContainer"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/navHeaderEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="admin@gatherly.com"
+        android:textSize="14sp"
+        android:textColor="@color/colorOnPrimaryContainer"
+        android:alpha="0.8" />
+
+    <com.google.android.material.chip.Chip
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Administrator"
+        android:textSize="11sp"
+        android:textColor="@color/colorOnSecondary"
+        app:chipBackgroundColor="@color/colorSecondary"
+        app:chipCornerRadius="12dp"
+        app:chipMinHeight="24dp"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>
