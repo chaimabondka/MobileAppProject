@@ -17,7 +17,6 @@ public class BookingsRepository {
         this.userEmail = email;
     }
 
-    /** BOOK EVENT */
     /** BOOK EVENT with capacity check */
     public boolean bookEvent(long eventId) {
         SQLiteDatabase db = helper.getWritableDatabase();

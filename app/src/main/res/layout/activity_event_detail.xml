@@ -232,6 +232,33 @@
                         android:textColor="@android:color/white" />
                 </LinearLayout>
 
+                <!-- QR TICKET SECTION -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="16dp">
+
+                    <TextView
+                        android:id="@+id/tvTicketTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your ticket QR"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#222222"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/ivTicketQr"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="Ticket QR code"
+                        android:visibility="gone" />
+                </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

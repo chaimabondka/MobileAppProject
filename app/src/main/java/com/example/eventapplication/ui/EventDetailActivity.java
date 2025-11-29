@@ -23,7 +23,10 @@ import com.example.eventapplication.data.Comment;
 import com.example.eventapplication.data.CommentsRepository;
 import com.example.eventapplication.data.Event;
 import com.example.eventapplication.data.EventDao;
+import com.example.eventapplication.data.EventDbHelper;
 import com.example.eventapplication.data.LikesRepository;
+import com.example.eventapplication.data.Ticket;
+import com.example.eventapplication.data.TicketDao;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,6 +34,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +49,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
     private BookingsRepository bookingRepo;
     private CommentsRepository commentsRepo;
     private LikesRepository likesRepo;
+    private TicketDao ticketDao;
     private Event event;
     private TextView tvCapacity;
     private GoogleMap mMap;
@@ -52,6 +60,8 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
     private String currentUserName;
 
     private ImageView ivEventImage;
+    private ImageView ivTicketQr;
+    private TextView tvTicketTitle;
     private MaterialButton btnBook, btnEdit, btnDelete, btnSendComment;
     private TextView tvTitle, tvDate, tvSubtitle, tvLocation, tvDescription;
     private ImageButton btnLike, btnDislike;
@@ -82,6 +92,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         bookingRepo = new BookingsRepository(this, session.getEmail());
         commentsRepo = new CommentsRepository(this);
         likesRepo = new LikesRepository(this);
+        ticketDao = new TicketDao(this);
 
         bindViews();
         setupCommentsList();
@@ -119,6 +130,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         loadLikes();
         loadComments();
         updateButtonState();
+        updateTicketQr();
 
         // Admin-only controls
         final boolean isAdmin = session.isAdmin();
@@ -174,6 +186,14 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
 
         tvCapacity = findViewById(R.id.tvCapacity);
         btnOpenInMaps = findViewById(R.id.btnOpenInMaps);
+        ivTicketQr = findViewById(R.id.ivTicketQr);
+        tvTicketTitle = findViewById(R.id.tvTicketTitle);
+        if (ivTicketQr != null) {
+            ivTicketQr.setVisibility(android.view.View.GONE);
+        }
+        if (tvTicketTitle != null) {
+            tvTicketTitle.setVisibility(android.view.View.GONE);
+        }
     }
 
     private void updateCapacityUi() {
@@ -199,6 +219,108 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         } else {
             // fall back to normal BOOK / BOOKED logic
             updateButtonState();
+        }
+    }
+
+    /**
+     * Create a ticket row for this booking if needed (outside the booking transaction)
+     * and generate a QR code bitmap into ivTicketQr.
+     */
+    private void ensureTicketForCurrentUser() {
+        if (ticketDao == null || ivTicketQr == null) return;
+        if (currentUserId == null) return;
+
+        // Find the most recent booking id for this user/email & event
+        EventDbHelper helper = new EventDbHelper(this);
+        android.database.sqlite.SQLiteDatabase db = helper.getReadableDatabase();
+        long bookingId = -1L;
+        android.database.Cursor c = db.rawQuery(
+                "SELECT id FROM " + EventDbHelper.TABLE_BOOKINGS + " WHERE event_id=? AND user_email=? ORDER BY id DESC LIMIT 1",
+                new String[]{String.valueOf(eventId), session.getEmail()}
+        );
+        try {
+            if (c.moveToFirst()) {
+                bookingId = c.getLong(0);
+            }
+        } finally {
+            c.close();
+        }
+        if (bookingId == -1L) return;
+
+        Ticket existing = ticketDao.findByBookingId(bookingId);
+        String payload;
+        if (existing != null) {
+            payload = existing.qrPayload;
+        } else {
+            // Make payload human-readable and labeled
+            payload = "booking_id=" + bookingId + ";user_id=" + currentUserName + ";event_id=" + event.title;
+            ticketDao.insert(bookingId, currentUserId, eventId, payload);
+        }
+
+        renderQr(payload);
+    }
+
+    /**
+     * Update QR visibility based on booking state.
+     */
+    private void updateTicketQr() {
+        if (ivTicketQr == null) return;
+        if (!bookingRepo.isBooked(eventId)) {
+            ivTicketQr.setVisibility(android.view.View.GONE);
+            if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            return;
+        }
+
+        // Try to load existing ticket and show QR
+        if (ticketDao == null || currentUserId == null) {
+            ivTicketQr.setVisibility(android.view.View.GONE);
+            if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            return;
+        }
+
+        // Look up latest booking
+        EventDbHelper helper = new EventDbHelper(this);
+        android.database.sqlite.SQLiteDatabase db = helper.getReadableDatabase();
+        long bookingId = -1L;
+        android.database.Cursor c = db.rawQuery(
+                "SELECT id FROM " + EventDbHelper.TABLE_BOOKINGS + " WHERE event_id=? AND user_email=? ORDER BY id DESC LIMIT 1",
+                new String[]{String.valueOf(eventId), session.getEmail()}
+        );
+        try {
+            if (c.moveToFirst()) {
+                bookingId = c.getLong(0);
+            }
+        } finally {
+            c.close();
+        }
+        if (bookingId == -1L) {
+            ivTicketQr.setVisibility(android.view.View.GONE);
+            if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            return;
+        }
+
+        Ticket t = ticketDao.findByBookingId(bookingId);
+        if (t == null) {
+            ivTicketQr.setVisibility(android.view.View.GONE);
+            if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
+            return;
+        }
+
+        renderQr(t.qrPayload);
+    }
+
+    private void renderQr(String payload) {
+        if (ivTicketQr == null) return;
+        try {
+            BarcodeEncoder encoder = new BarcodeEncoder();
+            Bitmap bitmap = encoder.encodeBitmap(payload, BarcodeFormat.QR_CODE, 500, 500);
+            ivTicketQr.setImageBitmap(bitmap);
+            ivTicketQr.setVisibility(android.view.View.VISIBLE);
+            if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ivTicketQr.setVisibility(android.view.View.GONE);
+            if (tvTicketTitle != null) tvTicketTitle.setVisibility(android.view.View.GONE);
         }
     }
 
@@ -280,12 +402,15 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
                 Toast.makeText(this, "No more places available", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // Ensure a ticket exists and update QR display
+            ensureTicketForCurrentUser();
             Toast.makeText(this, "Event saved!", Toast.LENGTH_SHORT).show();
         }
         // refresh event from DB to get updated availablePlaces
         event = dao.getById(eventId);
         updateButtonState();
         updateCapacityUi();
+        updateTicketQr();
     }
 
     private void updateButtonState() {

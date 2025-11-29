@@ -1,159 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    android:padding="16dp">
+    android:background="@android:color/white">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/tvDiscoverTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Discover"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorOnSurface"
-        android:layout_marginBottom="12dp" />
-
-    <!-- Search bar -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchLayout"
+    <!-- All your content -->
+    <LinearLayout
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:startIconDrawable="@android:drawable/ic_menu_search"
-        android:layout_marginBottom="12dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search events..." />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Horizontal categories -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="12dp"
-        android:overScrollMode="never">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipContainer"
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvDiscoverTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:singleLine="true"
-            app:singleSelection="true">
+            android:text="Discover"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorOnSurface"
+            android:layout_marginBottom="12dp" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipAll"
-                android:text="All"
-                android:checked="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipToday"
-                android:text="Today"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipWeek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Week"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipPopular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Popular"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="By date"
-                android:checkable="true"/>
-
-        </com.google.android.material.chip.ChipGroup>
-
-    </HorizontalScrollView>
-
-    <!-- Popular events label -->
-    <TextView
-        android:id="@+id/tvPopularLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Popular events"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@color/colorOnSurface"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp" />
-
-    <!-- Popular events slider section -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginBottom="8dp"
-        app:cardCornerRadius="22dp"
-        app:cardUseCompatPadding="true"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@color/colorSurface">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSlider"
+        <!-- Search bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="4dp" />
+            android:layout_height="wrap_content"
+            app:startIconDrawable="@android:drawable/ic_menu_search"
+            android:layout_marginBottom="12dp">
 
-    </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search events..." />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Main event list label -->
-    <TextView
-        android:id="@+id/tvAllEventsLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="All events"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@color/colorOnSurface"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp" />
-
-    <!-- Main event list section -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="2dp"
-        app:cardCornerRadius="22dp"
-        app:cardUseCompatPadding="true"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@color/colorSurface">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvEvents"
+        <!-- Horizontal categories -->
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:overScrollMode="never">
 
-    </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:singleSelection="true">
 
-    <!-- FAB -->
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    android:text="All"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipToday"
+                    android:text="Today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Week"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPopular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Popular"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="By date"
+                    android:checkable="true"/>
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+
+        <!-- Popular events label -->
+        <TextView
+            android:id="@+id/tvPopularLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Popular events"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/colorOnSurface"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Popular events slider section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="22dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/colorSurface">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSlider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="4dp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Main event list label -->
+        <TextView
+            android:id="@+id/tvAllEventsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All events"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/colorOnSurface"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Main event list section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp"
+            app:cardCornerRadius="22dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/colorSurface">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvEvents"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <!-- Floating action button OVERLAY -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:tint="@color/colorOnPrimary"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:layout_marginBottom="80dp"
+    app:backgroundTint="@color/colorPrimary"
+    app:tint="@color/colorOnPrimary"
+    app:srcCompat="@android:drawable/ic_input_add" />
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
