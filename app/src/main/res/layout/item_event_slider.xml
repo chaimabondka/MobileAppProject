@@ -1,53 +1,163 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="260dp"
-    android:layout_height="160dp"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="18dp"
-    app:cardUseCompatPadding="true"
-    app:cardElevation="3dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true"
-    android:backgroundTint="#EFE5FF">
+    android:focusable="true">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Background Image -->
         <ImageView
             android:id="@+id/ivSliderImage"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_event_placeholder" />
+            android:src="@drawable/ic_event_placeholder"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
 
+        <!-- Gradient Overlay -->
+        <View
+            android:id="@+id/gradientOverlay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/gradient_overlay_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Featured Badge -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipFeatured"
+            style="@style/Widget.Material3.Chip.Assist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            android:text="Featured"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            app:chipBackgroundColor="@color/colorSecondary"
+            app:chipCornerRadius="12dp"
+            app:chipMinHeight="26dp"
+            app:chipIconTint="@android:color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Content Container -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/contentContainer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/tvSliderDate"
-                android:textSize="12sp"
-                android:textColor="#444"
+            <!-- Date with Icon -->
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/rounded_background_translucent"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginBottom="8dp">
 
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@android:drawable/ic_menu_my_calendar"
+                    android:tint="@android:color/white"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvSliderDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="16 July 2020"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="0"
+                    android:shadowDy="1"
+                    android:shadowRadius="2" />
+            </LinearLayout>
+
+            <!-- Event Title -->
             <TextView
                 android:id="@+id/tvSliderTitle"
-                android:layout_marginTop="4dp"
-                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Amazing Event Title"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#111"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textColor="@android:color/white"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:letterSpacing="-0.01"
+                android:lineSpacingExtra="2dp"
+                android:shadowColor="#80000000"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="4" />
+
+            <!-- Location -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@android:drawable/ic_menu_mylocation"
+                    android:tint="@android:color/white"
+                    android:alpha="0.9"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvSliderLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Location"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/white"
+                    android:alpha="0.9"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="0"
+                    android:shadowDy="1"
+                    android:shadowRadius="2" />
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

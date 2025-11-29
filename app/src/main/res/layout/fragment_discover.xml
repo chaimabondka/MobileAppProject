@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/colorBackground">
 
     <!-- All your content -->
     <LinearLayout
@@ -12,39 +12,63 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="24dp">
 
         <!-- Title -->
         <TextView
             android:id="@+id/tvDiscoverTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Discover"
-            android:textSize="26sp"
+            android:text="Discover Events"
+            android:textSize="32sp"
             android:textStyle="bold"
             android:textColor="@color/colorOnSurface"
-            android:layout_marginBottom="12dp" />
+            android:letterSpacing="-0.02"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find amazing events happening around you"
+            android:textSize="14sp"
+            android:textColor="@color/colorOnSurfaceVariant"
+            android:layout_marginBottom="20dp" />
 
         <!-- Search bar -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             app:startIconDrawable="@android:drawable/ic_menu_search"
-            android:layout_marginBottom="12dp">
+            app:startIconTint="@color/colorPrimary"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="2dp"
+            app:boxBackgroundColor="@color/colorSurfaceVariant"
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search events..." />
+                android:hint="Search events, locations..."
+                android:textSize="15sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Horizontal categories -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="12dp"
+            android:paddingBottom="16dp"
+            android:scrollbars="none"
             android:overScrollMode="never">
 
             <com.google.android.material.chip.ChipGroup
@@ -52,116 +76,152 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:singleLine="true"
-                app:singleSelection="true">
+                app:singleSelection="true"
+                app:chipSpacingHorizontal="8dp">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipAll"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:text="All"
                     android:checked="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:chipCornerRadius="20dp"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipToday"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:text="Today"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:chipCornerRadius="20dp"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipWeek"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Week"/>
+                    android:text="This Week"
+                    app:chipCornerRadius="20dp"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipPopular"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Popular"/>
+                    android:text="Popular"
+                    app:chipCornerRadius="20dp"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipDate"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="By date"
-                    android:checkable="true"/>
+                    android:text="By Date"
+                    android:checkable="true"
+                    app:chipCornerRadius="20dp"/>
 
             </com.google.android.material.chip.ChipGroup>
 
         </HorizontalScrollView>
 
         <!-- Popular events label -->
-        <TextView
-            android:id="@+id/tvPopularLabel"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Popular events"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/colorOnSurface"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/tvPopularLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Popular Events"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/colorOnSurface"
+                android:letterSpacing="-0.01" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See all"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="8dp" />
+        </LinearLayout>
 
         <!-- Popular events slider section -->
-        <com.google.android.material.card.MaterialCardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSlider"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="22dp"
-            app:cardUseCompatPadding="true"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/colorSurface">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvSlider"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="4dp" />
-
-        </com.google.android.material.card.MaterialCardView>
+            android:layout_height="220dp"
+            android:layout_marginBottom="20dp"
+            android:clipToPadding="false"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp" />
 
         <!-- Main event list label -->
-        <TextView
-            android:id="@+id/tvAllEventsLabel"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="All events"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/colorOnSurface"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/tvAllEventsLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="All Events"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/colorOnSurface"
+                android:letterSpacing="-0.01" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilter"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filter"
+                app:chipIcon="@android:drawable/ic_menu_sort_by_size"
+                app:chipCornerRadius="16dp" />
+        </LinearLayout>
 
         <!-- Main event list section -->
-        <com.google.android.material.card.MaterialCardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEvents"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="2dp"
-            app:cardCornerRadius="22dp"
-            app:cardUseCompatPadding="true"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/colorSurface">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvEvents"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </com.google.android.material.card.MaterialCardView>
+            android:clipToPadding="false"
+            android:paddingBottom="16dp" />
 
     </LinearLayout>
 
     <!-- Floating action button OVERLAY -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="80dp"
-    app:backgroundTint="@color/colorPrimary"
-    app:tint="@color/colorOnPrimary"
-    app:srcCompat="@android:drawable/ic_input_add" />
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="88dp"
+        android:text="Create Event"
+        android:textColor="@color/colorOnPrimary"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/colorOnPrimary"
+        app:backgroundTint="@color/colorPrimary"
+        app:elevation="6dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

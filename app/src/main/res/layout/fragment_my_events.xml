@@ -1,33 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    android:padding="16dp">
+    android:background="@color/colorBackground">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="24dp"
+        android:animateLayoutChanges="true">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Events"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorOnSurface"
+                android:letterSpacing="-0.02"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Events you've booked and registered for"
+                android:textSize="14sp"
+                android:textColor="@color/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <!-- Filter Chips -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:singleSelection="true"
+                app:chipSpacingHorizontal="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="All"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipCornerRadius="20dp"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipUpcoming"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="Upcoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipCornerRadius="20dp"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPast"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="Past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipCornerRadius="20dp"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCancelled"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="Cancelled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipCornerRadius="20dp"/>
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+        <!-- Stats Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/colorPrimaryContainer">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <!-- Total Events -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvTotalEvents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorOnPrimaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorOnPrimaryContainer"
+                        android:alpha="0.8" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorOnPrimaryContainer"
+                    android:alpha="0.2" />
+
+                <!-- Upcoming Events -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvUpcomingEvents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorOnPrimaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upcoming"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorOnPrimaryContainer"
+                        android:alpha="0.8" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorOnPrimaryContainer"
+                    android:alpha="0.2" />
+
+                <!-- Past Events -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvPastEvents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorOnPrimaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Past"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorOnPrimaryContainer"
+                        android:alpha="0.8" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Events List -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!-- RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMyEvents"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="16dp"
+                tools:listitem="@layout/item_event" />
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/emptyStateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="32dp"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    app:cardCornerRadius="60dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/colorSurfaceVariant"
+                    android:layout_marginBottom="24dp">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_menu_my_calendar"
+                        android:tint="@color/colorOnSurfaceVariant"
+                        android:alpha="0.6"
+                        tools:ignore="ContentDescription" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Events Yet"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorOnSurface"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You haven't booked any events yet.\nStart exploring and book your first event!"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:gravity="center"
+                    android:layout_marginBottom="24dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExploreEvents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Explore Events"
+                    android:textSize="15sp"
+                    app:icon="@android:drawable/ic_menu_search"
+                    app:iconSize="20dp"
+                    app:cornerRadius="16dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:textColor="@color/colorOnPrimary" />
+            </LinearLayout>
+
+            <!-- Loading State -->
+            <FrameLayout
+                android:id="@+id/loadingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:background="@color/colorSurface">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/colorPrimary" />
+            </FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabCreateEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Booked Events"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="12dp"/>
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Create Event"
+        android:textColor="@color/colorOnPrimary"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/colorOnPrimary"
+        app:backgroundTint="@color/colorPrimary"
+        app:elevation="6dp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="4dp"
-        app:cardCornerRadius="22dp"
-        app:cardUseCompatPadding="true"
-        app:cardElevation="4dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMyEvents"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </com.google.android.material.card.MaterialCardView>
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

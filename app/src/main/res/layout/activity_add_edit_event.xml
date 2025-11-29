@@ -1,114 +1,391 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#FFF7FB">
+    android:background="@color/colorBackground">
+
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+            app:title="Create Event"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+            app:titleTextColor="@color/colorOnSurface" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:animateLayoutChanges="true">
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/tvFormTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Event"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="#222222"
-            android:layout_marginBottom="16dp" />
-
-        <!-- IMAGE PREVIEW + PICK BUTTON -->
-        <ImageView
-            android:id="@+id/ivEventImagePreview"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_event_placeholder"
-            android:background="#EDE0FF"
-            android:layout_marginBottom="8dp" />
-
-        <Button
-            android:id="@+id/btnPickImage"
+        <!-- Section: Event Image -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose image"
-            android:backgroundTint="#6D3EFF"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
 
-        <!-- BASIC FIELDS -->
-        <EditText
-            android:id="@+id/etEventTitle"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Image Preview -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/ivEventImagePreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_event_placeholder"
+                        tools:ignore="ContentDescription" />
+
+                    <!-- Overlay for better button visibility -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/gradient_overlay" />
+
+                    <!-- Pick Image Button Overlay -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPickImage"
+                        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Choose Image"
+                        android:textColor="@color/colorOnPrimary"
+                        app:icon="@android:drawable/ic_menu_gallery"
+                        app:iconSize="22dp"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:cornerRadius="16dp"
+                        app:elevation="4dp" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Image Helper Text -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Upload a captivating cover image for your event"
+                    android:textSize="13sp"
+                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:gravity="center"
+                    android:padding="16dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section: Basic Information -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title" />
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
 
-        <!-- DATE: opens DatePickerDialog -->
-        <EditText
-            android:id="@+id/etEventDate"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Basic Information"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorOnSurface"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Event Title -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:startIconDrawable="@android:drawable/ic_menu_edit"
+                    app:startIconTint="@color/colorPrimary"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="100"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEventTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Event Title"
+                        android:inputType="textCapWords"
+                        android:maxLength="100"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Event Subtitle -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:startIconDrawable="@android:drawable/ic_menu_info_details"
+                    app:startIconTint="@color/colorPrimary"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="150"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEventSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Event Subtitle or Tagline"
+                        android:inputType="textCapSentences"
+                        android:maxLength="150"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Event Date -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:startIconDrawable="@android:drawable/ic_menu_my_calendar"
+                    app:startIconTint="@color/colorPrimary"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@android:drawable/ic_menu_today"
+                    app:endIconTint="@color/colorPrimary"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEventDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Event Date & Time"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:inputType="none"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section: Event Details -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Date (e.g. 16 July 2020)"
-            android:layout_marginTop="8dp"
-            android:focusable="false"
-            android:clickable="true"
-            android:inputType="none" />
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
 
-        <EditText
-            android:id="@+id/etEventSubtitle"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Event Details"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorOnSurface"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Capacity -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+                    app:startIconTint="@color/colorPrimary"
+                    app:suffixText="attendees"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:helperText="Maximum number of attendees"
+                    app:helperTextEnabled="true"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEventCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Capacity"
+                        android:inputType="number"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Location -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:startIconDrawable="@android:drawable/ic_menu_mylocation"
+                    app:startIconTint="@color/colorPrimary"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@android:drawable/ic_dialog_map"
+                    app:endIconTint="@color/colorPrimary"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:helperText="Tap map icon to select from map"
+                    app:helperTextEnabled="true"
+                    android:layout_marginBottom="12dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEventLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Event Location"
+                        android:inputType="textPostalAddress"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Pick Location Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPickLocation"
+                    style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select Location on Map"
+                    app:icon="@android:drawable/ic_dialog_map"
+                    app:iconSize="20dp"
+                    app:cornerRadius="16dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section: Description -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Subtitle (e.g. Project Presentation)"
-            android:layout_marginTop="8dp" />
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
 
-        <!-- CAPACITY -->
-        <EditText
-            android:id="@+id/etEventCapacity"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Event Description"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorOnSurface"
+                    android:layout_marginBottom="16dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:startIconDrawable="@android:drawable/ic_menu_info_details"
+                    app:startIconTint="@color/colorPrimary"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="500"
+                    app:helperText="Provide detailed information about your event">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEventDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Description"
+                        android:gravity="top"
+                        android:minLines="5"
+                        android:maxLines="10"
+                        android:maxLength="500"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Action Buttons -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Number of places"
-            android:layout_marginTop="8dp"
-            android:inputType="number" />
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
-        <!-- LOCATION -->
-        <EditText
-            android:id="@+id/etEventLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Location"
-            android:layout_marginTop="8dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancel"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Cancel"
+                android:textSize="15sp"
+                app:cornerRadius="16dp" />
 
-        <Button
-            android:id="@+id/btnPickLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pick location"
-            android:layout_marginTop="8dp" />
-
-        <!-- DESCRIPTION -->
-        <EditText
-            android:id="@+id/etEventDescription"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:hint="Description"
-            android:gravity="top"
-            android:layout_marginTop="8dp"
-            android:inputType="textMultiLine" />
-
-        <!-- SAVE -->
-        <Button
-            android:id="@+id/btnSaveEvent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:backgroundTint="#6D3EFF"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="24dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveEvent"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="2"
+                android:text="Save Event"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorOnPrimary"
+                app:icon="@android:drawable/ic_menu_save"
+                app:iconGravity="textStart"
+                app:iconSize="22dp"
+                app:cornerRadius="16dp"
+                android:backgroundTint="@color/colorPrimary" />
+        </LinearLayout>
 
     </LinearLayout>
 
-</ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
