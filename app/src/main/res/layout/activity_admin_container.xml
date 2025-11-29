@@ -8,15 +8,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/bg_login">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/adminToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorSurface"
+            android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.Material3.ActionBar"
-            app:title="Admin Panel" />
+            app:title="Gatherly Admin"
+            app:titleTextColor="@color/colorOnPrimary" />
 
         <FrameLayout
             android:id="@+id/adminContentContainer"

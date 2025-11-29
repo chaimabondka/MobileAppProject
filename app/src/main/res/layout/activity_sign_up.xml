@@ -3,13 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@drawable/bg_login"
     android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <!-- Gatherly header -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvLogoGatherlySignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gatherly"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/colorOnPrimary" />
+
+            <TextView
+                android:id="@+id/tvSubtitleSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Create your Gatherly account"
+                android:textSize="13sp"
+                android:textColor="@color/colorOnPrimary" />
+
+        </LinearLayout>
 
         <!-- Avatar preview -->
         <ImageView
@@ -140,6 +176,7 @@
             android:layout_height="wrap_content"
             android:text="Create account"
             app:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="999dp"
             android:textColor="@color/colorOnPrimary" />
 
         <com.google.android.material.button.MaterialButton
@@ -149,6 +186,7 @@
             android:text="Already have an account? Sign in"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             app:strokeColor="@color/colorPrimary"
+            app:cornerRadius="999dp"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>

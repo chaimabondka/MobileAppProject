@@ -3,11 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:paddingLeft="16dp"
-    android:paddingTop="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="96dp">
+    android:background="@android:color/white"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,17 +29,17 @@
             android:layout_height="wrap_content"
             android:text="My profile"
             android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginBottom="12dp" />
+            android:textSize="22sp"
+            android:layout_marginBottom="16dp" />
 
         <!-- Card containing all fields -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="22dp"
             app:cardUseCompatPadding="true"
-            app:cardElevation="1dp"
+            app:cardElevation="4dp"
             app:cardBackgroundColor="@color/colorSurface">
 
             <LinearLayout
@@ -137,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Save"
-            app:cornerRadius="24dp"
+            app:cornerRadius="999dp"
             app:backgroundTint="@color/colorPrimary"
             android:textColor="@color/colorOnPrimary" />
 
