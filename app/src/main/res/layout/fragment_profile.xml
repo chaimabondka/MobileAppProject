@@ -16,8 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="24dp"
-        android:animateLayoutChanges="true">
+        android:paddingBottom="24dp">
 
         <!-- Header Section with Avatar -->
         <com.google.android.material.card.MaterialCardView

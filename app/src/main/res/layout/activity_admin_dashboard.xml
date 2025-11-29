@@ -15,8 +15,7 @@
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingTop="24dp"
-    android:paddingBottom="24dp"
-    android:animateLayoutChanges="true">
+    android:paddingBottom="24dp">
 
     <!-- Welcome Header -->
     <LinearLayout
