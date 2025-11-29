@@ -1,13 +1,15 @@
 package com.example.eventapplication.ui;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,22 +29,25 @@ import com.example.eventapplication.data.EventDbHelper;
 import com.example.eventapplication.data.LikesRepository;
 import com.example.eventapplication.data.Ticket;
 import com.example.eventapplication.data.TicketDao;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import android.graphics.Bitmap;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class EventDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class EventDetailActivity extends AppCompatActivity {
 
     private long eventId;
     private EventDao dao;
@@ -52,7 +57,8 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
     private TicketDao ticketDao;
     private Event event;
     private TextView tvCapacity;
-    private GoogleMap mMap;
+    private MapView mapPreview;
+    private Marker previewMarker;
     private android.widget.Button btnOpenInMaps;
 
     private SessionManager session;
@@ -82,6 +88,9 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
 
+        // Required by osmdroid: set a user agent to avoid being blocked
+        Configuration.getInstance().setUserAgentValue(getPackageName());
+
         dao = new EventDao(this);
         session = new SessionManager(this);
 
@@ -99,23 +108,15 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
 
         eventId = getIntent().getLongExtra("event_id", -1);
         if (eventId == -1) {
-            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
+            showSnack("Event not found");
             finish();
             return;
-        }
-
-        // 🔹 PUT THIS BLOCK HERE 🔹
-        // Map fragment setup
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);   // this = EventDetailActivity implements OnMapReadyCallback
         }
 
         // Open in external Maps app
         btnOpenInMaps.setOnClickListener(v -> {
             if (event == null || event.lat == 0 || event.lng == 0) {
-                Toast.makeText(this, "Location not set for this event", Toast.LENGTH_SHORT).show();
+                showSnack("Location not set for this event");
                 return;
             }
             String uri = "geo:" + event.lat + "," + event.lng + "?q=" + event.lat + "," + event.lng +
@@ -188,11 +189,16 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         btnOpenInMaps = findViewById(R.id.btnOpenInMaps);
         ivTicketQr = findViewById(R.id.ivTicketQr);
         tvTicketTitle = findViewById(R.id.tvTicketTitle);
+        mapPreview = findViewById(R.id.mapPreview);
         if (ivTicketQr != null) {
             ivTicketQr.setVisibility(android.view.View.GONE);
         }
         if (tvTicketTitle != null) {
-            tvTicketTitle.setVisibility(android.view.View.GONE);
+            tvTicketTitle.setVisibility(View.GONE);
+        }
+
+        if (mapPreview != null) {
+            mapPreview.setMultiTouchControls(false);
         }
     }
 
@@ -333,7 +339,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
     private void loadEvent() {
         event = dao.getById(eventId);
         if (event == null) {
-            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
+            showSnack("Event not found");
             finish();
             return;
         }
@@ -385,7 +391,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
                 .setMessage("Are you sure you want to delete this event?")
                 .setPositiveButton("Delete", (dialog, which) -> {
                     dao.delete(eventId);
-                    Toast.makeText(this, "Event deleted", Toast.LENGTH_SHORT).show();
+                    showSnack("Event deleted");
                     finish();
                 })
                 .setNegativeButton("Cancel", null)
@@ -395,16 +401,16 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
     private void toggleBooking() {
         if (bookingRepo.isBooked(eventId)) {
             bookingRepo.unBookEvent(eventId);
-            Toast.makeText(this, "Removed from My Events", Toast.LENGTH_SHORT).show();
+            showSnack("Removed from My Events");
         } else {
             boolean ok = bookingRepo.bookEvent(eventId);
             if (!ok) {
-                Toast.makeText(this, "No more places available", Toast.LENGTH_SHORT).show();
+                showSnack("No more places available");
                 return;
             }
             // Ensure a ticket exists and update QR display
             ensureTicketForCurrentUser();
-            Toast.makeText(this, "Event saved!", Toast.LENGTH_SHORT).show();
+            showSnack("Event saved!");
         }
         // refresh event from DB to get updated availablePlaces
         event = dao.getById(eventId);
@@ -427,7 +433,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void onLikeClicked() {
         if (currentUserId == null) {
-            Toast.makeText(this, "Please login to like.", Toast.LENGTH_SHORT).show();
+            showSnack("Please login to like.");
             return;
         }
 
@@ -444,7 +450,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void onDislikeClicked() {
         if (currentUserId == null) {
-            Toast.makeText(this, "Please login to dislike.", Toast.LENGTH_SHORT).show();
+            showSnack("Please login to dislike.");
             return;
         }
 
@@ -471,7 +477,7 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
 
     private void onSendComment() {
         if (currentUserId == null) {
-            Toast.makeText(this, "Please login to comment.", Toast.LENGTH_SHORT).show();
+            showSnack("Please login to comment.");
             return;
         }
 
@@ -484,6 +490,10 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
         etComment.setText("");
         loadComments();
         rvComments.smoothScrollToPosition(comments.size() - 1);
+    }
+
+    private void showSnack(String msg) {
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
 
     // Simple comments adapter showing "user: text"
@@ -524,20 +534,69 @@ public class EventDetailActivity extends AppCompatActivity implements OnMapReady
             }
         }
     }
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        updateMapMarker();
-    }
-
     private void updateMapMarker() {
-        if (mMap == null || event == null) return;
+        if (mapPreview == null || event == null) return;
 
-        mMap.clear();
-        if (event.lat != 0 || event.lng != 0) {
-            LatLng pos = new LatLng(event.lat, event.lng);
-            mMap.addMarker(new MarkerOptions().position(pos).title(event.title));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 14f));
+        double lat = event.lat;
+        double lng = event.lng;
+
+        // If no coordinates stored yet but we have a textual location, first try to parse "lat, lng"
+        if ((lat == 0 && lng == 0) && event.location != null && !event.location.isEmpty()) {
+            boolean parsed = false;
+            String loc = event.location.trim();
+            if (loc.contains(",")) {
+                String[] parts = loc.split(",");
+                if (parts.length >= 2) {
+                    try {
+                        double pLat = Double.parseDouble(parts[0].trim());
+                        double pLng = Double.parseDouble(parts[1].trim());
+                        lat = pLat;
+                        lng = pLng;
+                        parsed = true;
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            }
+
+            // If parsing failed, fall back to geocoding the address text
+            if (!parsed) {
+                try {
+                    Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                    List<Address> results = geocoder.getFromLocationName(event.location, 1);
+                    if (results != null && !results.isEmpty()) {
+                        Address a = results.get(0);
+                        lat = a.getLatitude();
+                        lng = a.getLongitude();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Persist back if we found valid coordinates
+            if (lat != 0 || lng != 0) {
+                event.lat = lat;
+                event.lng = lng;
+                dao.update(event);
+            }
+        }
+
+        if (lat != 0 || lng != 0) {
+            GeoPoint pos = new GeoPoint(lat, lng);
+
+            if (previewMarker == null) {
+                previewMarker = new Marker(mapPreview);
+                previewMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                mapPreview.getOverlays().add(previewMarker);
+            }
+
+            previewMarker.setPosition(pos);
+
+            IMapController controller = mapPreview.getController();
+            controller.setZoom(14.0);
+            controller.setCenter(pos);
+
+            mapPreview.invalidate();
         }
     }
 

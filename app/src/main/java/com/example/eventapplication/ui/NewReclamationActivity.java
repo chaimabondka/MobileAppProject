@@ -3,7 +3,6 @@ package com.example.eventapplication.ui;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +12,7 @@ import com.example.eventapplication.auth.SessionManager;
 import com.example.eventapplication.data.Reclamation;
 import com.example.eventapplication.data.ReclamationDao;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 
 public class NewReclamationActivity extends AppCompatActivity {
 
@@ -36,21 +36,30 @@ public class NewReclamationActivity extends AppCompatActivity {
     }
 
     private void submit() {
+        etTitle.setError(null);
+        etDescription.setError(null);
+
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
 
+        boolean hasError = false;
         if (TextUtils.isEmpty(title)) {
-            Toast.makeText(this, "Title is required", Toast.LENGTH_SHORT).show();
-            return;
+            etTitle.setError("Title is required");
+            hasError = true;
         }
         if (TextUtils.isEmpty(description)) {
-            Toast.makeText(this, "Description is required", Toast.LENGTH_SHORT).show();
+            etDescription.setError("Description is required");
+            hasError = true;
+        }
+
+        if (hasError) {
+            showSnack("Please fill in all required fields");
             return;
         }
 
         String userId = session.getUserId();
         if (userId == null) {
-            Toast.makeText(this, "You must be logged in.", Toast.LENGTH_SHORT).show();
+            showSnack("You must be logged in.");
             return;
         }
 
@@ -64,10 +73,14 @@ public class NewReclamationActivity extends AppCompatActivity {
 
         long id = dao.insert(r);
         if (id > 0) {
-            Toast.makeText(this, "Reclamation sent", Toast.LENGTH_SHORT).show();
+            showSnack("Reclamation sent");
             finish();
         } else {
-            Toast.makeText(this, "Error while saving", Toast.LENGTH_SHORT).show();
+            showSnack("Error while saving");
         }
+    }
+
+    private void showSnack(String msg) {
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

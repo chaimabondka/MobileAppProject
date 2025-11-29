@@ -10,10 +10,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Booked Events"
+        android:text="My booked events"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginBottom="12dp"/>
+        android:textColor="@color/colorOnSurface"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvMyEventsCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 events booked"
+        android:textSize="14sp"
+        android:textColor="@color/colorOnSurface"
+        android:layout_marginBottom="8dp"/>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -24,10 +34,30 @@
         app:cardUseCompatPadding="true"
         app:cardElevation="4dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMyEvents"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvEmptyMyEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You have no booked events yet."
+                android:textSize="15sp"
+                android:textColor="@color/colorOnSurface"
+                android:gravity="center"
+                android:padding="16dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMyEvents"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

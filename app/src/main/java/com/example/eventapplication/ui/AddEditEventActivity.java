@@ -10,10 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import com.example.eventapplication.R;
 import com.example.eventapplication.auth.SessionManager;
@@ -51,7 +52,7 @@ public class AddEditEventActivity extends AppCompatActivity {
         // Only admins can add or edit events
         SessionManager session = new SessionManager(this);
         if (!session.isAdmin()) {
-            Toast.makeText(this, "Only administrators can manage events", Toast.LENGTH_SHORT).show();
+            showSnack("Only administrators can manage events");
             finish();
             return;
         }
@@ -155,10 +156,41 @@ public class AddEditEventActivity extends AppCompatActivity {
 
 
     private void saveEvent() {
+        // Reset previous errors
+        etTitle.setError(null);
+        etDate.setError(null);
+        etSubtitle.setError(null);
+        etLocation.setError(null);
+        etCapacity.setError(null);
+        etDescription.setError(null);
+
         String title = etTitle.getText().toString().trim();
+        String dateText = etDate.getText().toString().trim();
+        String subtitleText = etSubtitle.getText().toString().trim();
+        String locationText = etLocation.getText().toString().trim();
+        String descriptionText = etDescription.getText().toString().trim();
+
+        boolean hasError = false;
 
         if (TextUtils.isEmpty(title)) {
-            Toast.makeText(this, "Title is required", Toast.LENGTH_SHORT).show();
+            etTitle.setError("Title is required");
+            hasError = true;
+        }
+        if (TextUtils.isEmpty(dateText)) {
+            etDate.setError("Date is required");
+            hasError = true;
+        }
+        if (TextUtils.isEmpty(locationText)) {
+            etLocation.setError("Location is required");
+            hasError = true;
+        }
+        if (TextUtils.isEmpty(descriptionText)) {
+            etDescription.setError("Description is required");
+            hasError = true;
+        }
+
+        if (hasError) {
+            showSnack("Please correct the highlighted fields");
             return;
         }
 
@@ -168,7 +200,8 @@ public class AddEditEventActivity extends AppCompatActivity {
             try {
                 maxPlaces = Integer.parseInt(capacityStr);
             } catch (NumberFormatException ignored) {
-                Toast.makeText(this, "Invalid capacity, using 0", Toast.LENGTH_SHORT).show();
+                showSnack("Invalid capacity, using 0");
+                etCapacity.setError("Invalid number");
             }
         }
 
@@ -212,20 +245,24 @@ public class AddEditEventActivity extends AppCompatActivity {
         if (eventId == -1) {
             long newId = dao.insert(e);
             if (newId > 0) {
-                Toast.makeText(this, "Event created", Toast.LENGTH_SHORT).show();
+                showSnack("Event created");
                 finish();
             } else {
-                Toast.makeText(this, "Error creating event", Toast.LENGTH_SHORT).show();
+                showSnack("Error creating event");
             }
         } else {
             int updated = dao.update(e);
             if (updated > 0) {
-                Toast.makeText(this, "Event updated", Toast.LENGTH_SHORT).show();
+                showSnack("Event updated");
                 finish();
             } else {
-                Toast.makeText(this, "Error updating event", Toast.LENGTH_SHORT).show();
+                showSnack("Error updating event");
             }
         }
+    }
+
+    private void showSnack(String msg) {
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

@@ -8,11 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import com.example.eventapplication.R;
 import com.example.eventapplication.auth.SessionManager;
@@ -92,7 +93,7 @@ public class ProfileFragment extends Fragment {
         currentUser = userDao.findByEmail(email);
 
         if (currentUser == null) {
-            Toast.makeText(getContext(), "User not found", Toast.LENGTH_SHORT).show();
+            showSnack("User not found");
             return;
         }
 
@@ -110,22 +111,63 @@ public class ProfileFragment extends Fragment {
     private void saveChanges() {
         if (currentUser == null) return;
 
-        currentUser.name = etName.getText().toString().trim();
-        currentUser.phone = etPhone.getText().toString().trim();
-        currentUser.address = etAddress.getText().toString().trim();
-        currentUser.role = currentUser.role;  // unchanged
+        etName.setError(null);
+        etAge.setError(null);
 
+        String nameText = etName.getText().toString().trim();
+        String phoneText = etPhone.getText().toString().trim();
+        String addressText = etAddress.getText().toString().trim();
         String ageText = etAge.getText().toString().trim();
-        currentUser.age = ageText.isEmpty() ? null : Integer.parseInt(ageText);
+
+        boolean hasError = false;
+
+        if (nameText.isEmpty()) {
+            etName.setError("Name is required");
+            hasError = true;
+        }
+
+        Integer ageValue = null;
+        if (!ageText.isEmpty()) {
+            try {
+                int parsed = Integer.parseInt(ageText);
+                if (parsed < 10 || parsed > 120) {
+                    etAge.setError("Age must be between 10 and 120");
+                    hasError = true;
+                } else {
+                    ageValue = parsed;
+                }
+            } catch (NumberFormatException e) {
+                etAge.setError("Invalid age");
+                hasError = true;
+            }
+        }
+
+        if (hasError) {
+            showSnack("Please correct the highlighted fields");
+            return;
+        }
+
+        currentUser.name = nameText;
+        currentUser.phone = phoneText;
+        currentUser.address = addressText;
+        currentUser.role = currentUser.role;  // unchanged
+        currentUser.age = ageValue;
 
         int rows = userDao.update(currentUser);
 
         if (rows > 0) {
             // update session name if changed
             session.login(currentUser.id, currentUser.name, currentUser.email);
-            Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
+            showSnack("Profile updated");
         } else {
-            Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+            showSnack("Failed to update profile");
+        }
+    }
+
+    private void showSnack(String msg) {
+        View root = getView();
+        if (root != null) {
+            Snackbar.make(root, msg, Snackbar.LENGTH_SHORT).show();
         }
     }
 

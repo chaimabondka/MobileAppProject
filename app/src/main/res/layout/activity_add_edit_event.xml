@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="#FFF7FB">
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,98 +17,134 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Event"
-            android:textSize="22sp"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#222222"
-            android:layout_marginBottom="16dp" />
+            android:textColor="@color/colorOnSurface"
+            android:layout_marginBottom="12dp" />
 
-        <!-- IMAGE PREVIEW + PICK BUTTON -->
-        <ImageView
-            android:id="@+id/ivEventImagePreview"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_event_placeholder"
-            android:background="#EDE0FF"
-            android:layout_marginBottom="8dp" />
-
-        <Button
-            android:id="@+id/btnPickImage"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose image"
-            android:backgroundTint="#6D3EFF"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
+            android:layout_margin="4dp"
+            app:cardCornerRadius="22dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/colorSurface">
 
-        <!-- BASIC FIELDS -->
-        <EditText
-            android:id="@+id/etEventTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <!-- DATE: opens DatePickerDialog -->
-        <EditText
-            android:id="@+id/etEventDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Date (e.g. 16 July 2020)"
-            android:layout_marginTop="8dp"
-            android:focusable="false"
-            android:clickable="true"
-            android:inputType="none" />
+                <!-- IMAGE PREVIEW + PICK BUTTON -->
+                <ImageView
+                    android:id="@+id/ivEventImagePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_event_placeholder"
+                    android:background="#EDE0FF"
+                    android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/etEventSubtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Subtitle (e.g. Project Presentation)"
-            android:layout_marginTop="8dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPickImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose image"
+                    android:layout_marginBottom="16dp"
+                    app:cornerRadius="999dp"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:textColor="@color/colorOnPrimary" />
 
-        <!-- CAPACITY -->
-        <EditText
-            android:id="@+id/etEventCapacity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Number of places"
-            android:layout_marginTop="8dp"
-            android:inputType="number" />
+                <!-- BASIC FIELDS -->
+                <EditText
+                    android:id="@+id/etEventTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Title"
+                    android:padding="10dp"
+                    android:background="@android:drawable/edit_text" />
 
-        <!-- LOCATION -->
-        <EditText
-            android:id="@+id/etEventLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Location"
-            android:layout_marginTop="8dp" />
+                <!-- DATE: opens DatePickerDialog -->
+                <EditText
+                    android:id="@+id/etEventDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Date (e.g. 16 July 2020)"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:inputType="none"
+                    android:padding="10dp"
+                    android:background="@android:drawable/edit_text" />
 
-        <Button
-            android:id="@+id/btnPickLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pick location"
-            android:layout_marginTop="8dp" />
+                <EditText
+                    android:id="@+id/etEventSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Subtitle (e.g. Project Presentation)"
+                    android:layout_marginTop="8dp"
+                    android:padding="10dp"
+                    android:background="@android:drawable/edit_text" />
 
-        <!-- DESCRIPTION -->
-        <EditText
-            android:id="@+id/etEventDescription"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:hint="Description"
-            android:gravity="top"
-            android:layout_marginTop="8dp"
-            android:inputType="textMultiLine" />
+                <!-- CAPACITY -->
+                <EditText
+                    android:id="@+id/etEventCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Number of places"
+                    android:layout_marginTop="8dp"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:background="@android:drawable/edit_text" />
 
-        <!-- SAVE -->
-        <Button
-            android:id="@+id/btnSaveEvent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:backgroundTint="#6D3EFF"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="24dp" />
+                <!-- LOCATION -->
+                <EditText
+                    android:id="@+id/etEventLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Location"
+                    android:layout_marginTop="8dp"
+                    android:padding="10dp"
+                    android:background="@android:drawable/edit_text" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPickLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pick location"
+                    android:layout_marginTop="8dp"
+                    app:cornerRadius="999dp"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:textColor="@color/colorOnPrimary" />
+
+                <!-- DESCRIPTION -->
+                <EditText
+                    android:id="@+id/etEventDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:hint="Description"
+                    android:gravity="top"
+                    android:layout_marginTop="8dp"
+                    android:inputType="textMultiLine"
+                    android:padding="10dp"
+                    android:background="@android:drawable/edit_text" />
+
+                <!-- SAVE -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:layout_marginTop="20dp"
+                    app:cornerRadius="999dp"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:textColor="@color/colorOnPrimary" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

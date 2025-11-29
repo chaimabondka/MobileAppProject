@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import com.example.eventapplication.R;
 import com.example.eventapplication.auth.AuthRepository;
 import com.example.eventapplication.auth.EmailVerificationManager;
@@ -17,12 +20,10 @@ import com.example.eventapplication.data.UserDao;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
 public class SignInActivity extends AppCompatActivity {
     private EditText emailEt, passEt;
     private AuthRepository repo;
     private SessionManager session;
-
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,14 +31,9 @@ public class SignInActivity extends AppCompatActivity {
         repo = new AuthRepository(this);
         session = new SessionManager(this);
 
-
-
-
-
         emailEt = findViewById(R.id.etEmail);
         passEt = findViewById(R.id.etPassword);
         Button btn = findViewById(R.id.btnLogin);
-
 
         btn.setOnClickListener(v -> doLogin());
 
@@ -48,9 +44,7 @@ public class SignInActivity extends AppCompatActivity {
             finish();
         });
         findViewById(R.id.btnForgotPassword).setOnClickListener(v -> resetPassword());
-
     }
-
 
     private void doLogin() {
 
@@ -104,15 +98,13 @@ public class SignInActivity extends AppCompatActivity {
                     startActivity(new Intent(this, HomeActivity.class));
                     finish();
                 });
-        ;
-;
     }
 
     private void resetPassword() {
         String email = emailEt.getText().toString().trim();
 
         if (email.isEmpty()) {
-            Toast.makeText(this, "Enter your email first", Toast.LENGTH_SHORT).show();
+            toast("Enter your email first");
             return;
         }
 
@@ -120,21 +112,18 @@ public class SignInActivity extends AppCompatActivity {
                 .sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this,
-                                "Password reset email sent!",
-                                Toast.LENGTH_LONG).show();
+                        toast("Password reset email sent!");
                     } else {
+
                         String msg = (task.getException() != null)
                                 ? task.getException().getMessage()
                                 : "Unknown error";
-                        Toast.makeText(this,
-                                "Error: " + msg,
-                                Toast.LENGTH_LONG).show();
+                        toast("Error: " + msg);
                     }
                 });
     }
 
-
-
-    private void toast(String s) { Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
+    private void toast(String s) {
+        Snackbar.make(findViewById(android.R.id.content), s, Snackbar.LENGTH_SHORT).show();
+    }
 }

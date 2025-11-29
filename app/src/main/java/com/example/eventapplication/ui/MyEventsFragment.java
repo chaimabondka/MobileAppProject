@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ public class MyEventsFragment extends Fragment {
     private EventAdapter adapter;
     private BookingsRepository repo;
     private EventDao dao;
+    private TextView tvMyEventsCount;
+    private TextView tvEmptyMyEvents;
 
     @Nullable
     @Override
@@ -37,6 +40,8 @@ public class MyEventsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_my_events, container, false);
 
         rvMyEvents = v.findViewById(R.id.rvMyEvents);
+        tvMyEventsCount = v.findViewById(R.id.tvMyEventsCount);
+        tvEmptyMyEvents = v.findViewById(R.id.tvEmptyMyEvents);
         rvMyEvents.setLayoutManager(new LinearLayoutManager(getContext()));
 
         SessionManager session = new SessionManager(getContext());
@@ -55,6 +60,24 @@ public class MyEventsFragment extends Fragment {
         for (long id : ids) {
             Event e = dao.getById(id);
             if (e != null) events.add(e);
+        }
+
+        // Update count label
+        if (tvMyEventsCount != null) {
+            int count = events.size();
+            String label = count + (count == 1 ? " event booked" : " events booked");
+            tvMyEventsCount.setText(label);
+        }
+
+        // Empty state vs list visibility
+        if (tvEmptyMyEvents != null && rvMyEvents != null) {
+            if (events.isEmpty()) {
+                tvEmptyMyEvents.setVisibility(View.VISIBLE);
+                rvMyEvents.setVisibility(View.GONE);
+            } else {
+                tvEmptyMyEvents.setVisibility(View.GONE);
+                rvMyEvents.setVisibility(View.VISIBLE);
+            }
         }
 
         adapter = new EventAdapter(events, event -> {
